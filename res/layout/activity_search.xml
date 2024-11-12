@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SearchActivity">
+    android:background="@drawable/purple_background"
+    tools:context=".activities.SearchActivity">
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -24,19 +25,13 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/back" />
-
             <TextView
                 android:id="@+id/textViewHiUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Hi, Admin!"
-                android:textColor="@color/dark_purple"
+                android:textColor="@color/white"
                 android:textSize="28sp" />
 
             <TextView
@@ -45,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Search your city"
-                android:textColor="@color/dark_purple"
+                android:textColor="@color/white"
                 android:textSize="18sp" />
 
             <EditText
@@ -54,29 +49,33 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp"
                 android:background="@drawable/edittext_bg"
-                android:drawableStart="@drawable/search_icon"
+                android:drawableStart="@drawable/search"
                 android:drawablePadding="16dp"
+                android:focusableInTouchMode="true"
+                android:inputType="text"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
                 android:ems="10"
                 android:hint="Search..."
-                android:inputType="text"
                 android:padding="10dp"
                 android:textColorHint="@color/grey" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:background="@color/dark_purple">
+                android:layout_height="100dp"
+                android:background="@drawable/banner_hourly_bg">
 
                 <TextView
                     android:id="@+id/textCountry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:text="Viet Nam"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -90,7 +89,7 @@
                     android:layout_marginBottom="16dp"
                     android:text="Ha Noi"
                     android:textColor="@color/white"
-                    android:textSize="34sp"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/textLookLike"
                     app:layout_constraintStart_toStartOf="parent"
@@ -101,10 +100,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
                     android:text="Sunny"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -122,9 +121,8 @@
                     android:id="@+id/texttemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="30°C"
                     android:textColor="@color/white"
                     android:textSize="16sp"
@@ -136,19 +134,19 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="100dp"
                 android:layout_marginTop="16dp"
-                android:background="@color/dark_purple">
+                android:background="@drawable/banner_hourly_bg">
 
                 <TextView
                     android:id="@+id/textCountry2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:text="Viet Nam"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -162,7 +160,7 @@
                     android:layout_marginBottom="16dp"
                     android:text="Ha Noi"
                     android:textColor="@color/white"
-                    android:textSize="34sp"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/textLookLike2"
                     app:layout_constraintStart_toStartOf="parent"
@@ -173,10 +171,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
                     android:text="Sunny"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -194,8 +192,8 @@
                     android:id="@+id/texttemp2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="30°C"
                     android:textColor="@color/white"
                     android:textSize="16sp"
@@ -214,7 +212,7 @@
         app:layout_constraintBottom_toBottomOf="@id/scrollView2">
 
         <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/appBar"
+            android:id="@+id/bottomAppBar"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_gravity="bottom"
@@ -240,6 +238,9 @@
                         android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@drawable/ripple_effect"
                         app:srcCompat="@drawable/purple_search" />
                 </LinearLayout>
 
@@ -255,6 +256,9 @@
                         android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@drawable/ripple_effect"
                         app:srcCompat="@drawable/home_icon" />
                 </LinearLayout>
 
@@ -272,6 +276,9 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:visibility="invisible"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@drawable/ripple_effect"
                         app:srcCompat="@drawable/account_icon" />
                 </LinearLayout>
 
@@ -287,6 +294,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@drawable/ripple_effect"
                         app:srcCompat="@drawable/favourite_icon" />
                 </LinearLayout>
 
@@ -302,12 +312,16 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@drawable/ripple_effect"
                         app:srcCompat="@drawable/account_icon" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.bottomappbar.BottomAppBar>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_margin="8dp"
@@ -316,7 +330,7 @@
             app:tint="@color/dark_purple"
             app:backgroundTint="@color/light_purple"
             app:fabCustomSize="48dp"
-            app:layout_anchor="@id/appBar"
+            app:layout_anchor="@id/bottomAppBar"
             app:maxImageSize="22dp" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

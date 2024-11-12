@@ -14,7 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.weatherapp.R;
 
-public class StartScreen extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class StartScreen extends AppCompatActivity {
         btngetstart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(StartScreen.this, SignIn.class);
+                Intent intent = new Intent(SplashActivity.this, SignIn.class);
                 startActivity(intent);
             }
         });

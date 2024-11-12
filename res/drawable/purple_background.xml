@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 <item>
-    <shape android:layout_width="match_parent" android:layout_height="match_parent" android:shape="rectangle">
-        <gradient android:centerColor="#7C57B1" android:endColor="#9C59DF" android:startColor="#1E134C" android:angle="270"/>
+    <shape
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:shape="rectangle">
+        <gradient
+            android:startColor="#1E134C"
+            android:centerColor="#6a3fa1"
+            android:endColor="#8946a8"
+            android:angle="270"/>
     </shape>
 </item>
 </selector>

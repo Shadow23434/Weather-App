@@ -1,4 +1,4 @@
-package com.example.weatherapp.SignIn_SignUp;
+package com.example.weatherapp.startup;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.activity.MainActivity;
+import com.example.weatherapp.activities.MainActivity;
 import com.example.weatherapp.database.createDatabase;
 
 public class SignIn extends AppCompatActivity {

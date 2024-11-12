@@ -1,4 +1,4 @@
-package com.example.weatherapp.SignIn_SignUp;
+package com.example.weatherapp.startup;
 
 import android.content.Intent;
 import android.os.Bundle;
