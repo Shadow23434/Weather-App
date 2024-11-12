@@ -12,24 +12,45 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherApp"
         tools:targetApi="34">
-        <activity
-            android:name=".Home"
-            android:exported="false" />
+        
         <activity
             android:name=".SignIn_SignUp.SignUp"
             android:exported="false" />
+        
         <activity
             android:name=".SignIn_SignUp.SignIn"
             android:exported="false" />
+        
+            <activity
+            android:name=".activity.AssistantActivity"
+            android:exported="false" />
+        
+        <activity
+            android:name=".activity.AccountActivity"
+            android:exported="false" />
+        
+        <activity
+            android:name=".activity.FavouriteActivity"
+            android:exported="false" />
+        
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="false">
+        </activity>
+        
+        <activity
+            android:name=".activity.SearchActivity"
+            android:exported="false" />
+
         <activity
             android:name=".StartScreen.StartScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
