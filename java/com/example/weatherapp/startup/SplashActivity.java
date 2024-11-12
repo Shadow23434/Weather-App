@@ -1,4 +1,4 @@
-package com.example.weatherapp.StartScreen;
+package com.example.weatherapp.startup;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.SignIn_SignUp.SignIn;
 
 public class StartScreen extends AppCompatActivity {
 

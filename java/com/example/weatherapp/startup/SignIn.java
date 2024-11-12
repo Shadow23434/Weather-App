@@ -10,8 +10,8 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.weatherapp.Home;
 import com.example.weatherapp.R;
+import com.example.weatherapp.activity.MainActivity;
 import com.example.weatherapp.database.createDatabase;
 
 public class SignIn extends AppCompatActivity {
@@ -47,7 +47,7 @@ public class SignIn extends AppCompatActivity {
 
                     if(MyDB.checkUser(email, pass)){
                         Toast.makeText(SignIn.this, "Sign In successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SignIn.this, Home.class);
+                        Intent intent = new Intent(SignIn.this, MainActivity.class);
                         startActivity(intent);
                     }
                     else{
