@@ -78,23 +78,13 @@ public class MainActivity extends AppCompatActivity {
                         items.add(new Hourly(time, (int) temperature, weather));
                     }
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapterHourly.notifyDataSetChanged(); 
-                        }
+                    runOnUiThread(() -> adapterHourly.notifyDataSetChanged());
                     });
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MainActivity.this, "Error fetching weather data", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Error fetching weather data", Toast.LENGTH_SHORT).show());
             }
-        }
     }).start();
 }
 
