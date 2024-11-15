@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapterHourly);
     }
 
-    private void fetchWeatherData(ArrayList<Hourly> items) {
-    String url = https://api.weatherbit.io/v2.0/forecast/hourly?city=Hanoi&key=62728dd219764b80b15b71c0ca79d79c&hours=24;
+   private void fetchWeatherData(ArrayList<Hourly> items) {
+    String url = "https://api.weatherbit.io/v2.0/forecast/hourly?city=Hanoi&key=62728dd219764b80b15b71c0ca79d79c&hours=24";
 
     OkHttpClient client = new OkHttpClient();
 
@@ -60,33 +60,33 @@ public class MainActivity extends AppCompatActivity {
             .url(url)
             .build();
 
-    new Thread(new Runnable() {
-        @Override
-        public void run() {
-            try {
-                Response response = client.newCall(request).execute();
+    new Thread(() -> {
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful() && response.body() != null) {
+                String responseBody = response.body().string();
+                JSONObject jsonObject = new JSONObject(responseBody);
+                JSONArray data = jsonObject.getJSONArray("data");
 
-                if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
-                    JSONObject jsonObject = new JSONObject(responseBody);
-                    JSONArray list = jsonObject.getJSONArray("list");
-                    for (int i = 0; i < list.length(); i++) {
-                        JSONObject hourData = list.getJSONObject(i);
-                        String time = hourData.getString("dt_txt");
-                        double temperature = hourData.getJSONObject("main").getDouble("temp");
-                        String weather = hourData.getJSONArray("weather").getJSONObject(0).getString("description");
-                        items.add(new Hourly(time, (int) temperature, weather));
-                    }
+                for (int i = 0; i < data.length(); i++) {
+                    JSONObject hourlyData = data.getJSONObject(i);
+                    String time = hourlyData.getString("timestamp_local");
+                    double temperature = hourlyData.getDouble("temp");
+                    String weather = hourlyData.getJSONObject("weather").getString("description");
 
-                    runOnUiThread(() -> adapterHourly.notifyDataSetChanged());
-                    });
+                    items.add(new Hourly(time, (int) temperature, weather));
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Error fetching weather data", Toast.LENGTH_SHORT).show());
+
+                runOnUiThread(() -> adapterHourly.notifyDataSetChanged());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(() -> Toast.makeText(MainActivity.this, "Error fetching weather data", Toast.LENGTH_SHORT).show());
+        }
     }).start();
 }
+
+
 
     private void onClickBottomAppBar() {
         ImageView search_appBar_icon = findViewById(R.id.search_appBar_icon);
