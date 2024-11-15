@@ -17,6 +17,10 @@ import com.example.weatherapp.domains.Hourly;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,11 +42,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Hourly> items = new ArrayList<>();
 
         // Fetching api here
-        items.add(new Hourly("10 pm", 28, "cloudy"));
-        items.add(new Hourly("11 pm", 28, "sunny"));
-        items.add(new Hourly("12 pm", 28, "wind"));
-        items.add(new Hourly("1 am", 28, "storm"));
-        items.add(new Hourly("2 am", 28, "rainy"));
+        fetchWeatherData(items);
 
         recyclerView = findViewById(R.id.recycleViewTest);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -50,6 +50,53 @@ public class MainActivity extends AppCompatActivity {
         adapterHourly = new HourlyAdapter(items);
         recyclerView.setAdapter(adapterHourly);
     }
+
+    private void fetchWeatherData(ArrayList<Hourly> items) {
+    String url = https://api.openweathermap.org/data/2.5/forecast?q=Hanoi&units=metric&appid=62728dd219764b80b15b71c0ca79d79c;
+
+    OkHttpClient client = new OkHttpClient();
+
+    Request request = new Request.Builder()
+            .url(url)
+            .build();
+
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                Response response = client.newCall(request).execute();
+
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    JSONArray list = jsonObject.getJSONArray("list");
+                    for (int i = 0; i < list.length(); i++) {
+                        JSONObject hourData = list.getJSONObject(i);
+                        String time = hourData.getString("dt_txt");
+                        double temperature = hourData.getJSONObject("main").getDouble("temp");
+                        String weather = hourData.getJSONArray("weather").getJSONObject(0).getString("description");
+                        items.add(new Hourly(time, (int) temperature, weather));
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapterHourly.notifyDataSetChanged(); 
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "Error fetching weather data", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
+    }).start();
+}
 
     private void onClickBottomAppBar() {
         ImageView search_appBar_icon = findViewById(R.id.search_appBar_icon);
