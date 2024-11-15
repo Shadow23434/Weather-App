@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchWeatherData(ArrayList<Hourly> items) {
-    String url = https://api.openweathermap.org/data/2.5/forecast?q=Hanoi&units=metric&appid=62728dd219764b80b15b71c0ca79d79c;
+    String url = https://api.weatherbit.io/v2.0/forecast/hourly?city=Hanoi&key=62728dd219764b80b15b71c0ca79d79c&hours=24;
 
     OkHttpClient client = new OkHttpClient();
 
