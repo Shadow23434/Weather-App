@@ -3,18 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
     
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
-    <queries>
-        <intent>
-            <action android:name="RecogitionService"/>
-        </intent>
-        <package android:name="com.google.android.material.googlequicksearchbox"/>
-        <package android:name="com.Whatsapp"/>
-    </queries>
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"

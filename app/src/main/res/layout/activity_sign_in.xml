@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/falling_stars1"
-        android:layout_width="413dp"
+        android:layout_width="match_parent"
         android:layout_height="314dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -106,12 +106,11 @@
             android:textColor="#FBFBFB"
             android:textSize="20sp"
             android:textStyle="bold" />
-
         <Button
             android:id="@+id/btnSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="170dp"
+            android:layout_gravity="end"
             android:layout_marginTop="2dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="8dp"
