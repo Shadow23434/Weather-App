@@ -1,4 +1,4 @@
-package com.example.weatherapp.adapters;
+package com.example.weatherapp.hourly;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.R;
-import com.example.weatherapp.domains.Hourly;
 
 import java.util.ArrayList;
 

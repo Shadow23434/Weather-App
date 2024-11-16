@@ -5,16 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.adapters.HourlyAdapter;
-import com.example.weatherapp.domains.Hourly;
-import com.google.android.material.bottomappbar.BottomAppBar;
+import com.example.weatherapp.hourly.HourlyAdapter;
+import com.example.weatherapp.hourly.Hourly;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
