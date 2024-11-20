@@ -1,6 +1,8 @@
 package com.example.weatherapp.hourly;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +37,8 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.viewHolder
     public void onBindViewHolder(@NonNull HourlyAdapter.viewHolder holder, int position) {
         holder.hourTxt.setText(items.get(position).getHour());
         holder.tempTxt.setText(items.get(position).getTemp() + "℃");
-
+//        Glide.with(context).load(items.get(position).getPicPath()).into(holder.pic);
         int drawableResourceId = holder.itemView.getResources().getIdentifier(items.get(position).getPicPath(), "drawable", holder.itemView.getContext().getPackageName());
-
         Glide.with(context).load(drawableResourceId).into(holder.pic);
     }
 
@@ -51,7 +52,6 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.viewHolder
         ImageView pic;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
-
             hourTxt = itemView.findViewById(R.id.hourTxt);
             tempTxt = itemView.findViewById(R.id.tempTxt);
             pic = itemView.findViewById(R.id.pic);

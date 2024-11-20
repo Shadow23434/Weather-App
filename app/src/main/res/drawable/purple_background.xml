@@ -6,9 +6,9 @@
         android:layout_height="match_parent"
         android:shape="rectangle">
         <gradient
-            android:startColor="#1E134C"
-            android:centerColor="#6a3fa1"
-            android:endColor="#8946a8"
+            android:startColor="#1c2447"
+            android:centerColor="#443a90"
+            android:endColor="#9443ac"
             android:angle="270"/>
     </shape>
 </item>

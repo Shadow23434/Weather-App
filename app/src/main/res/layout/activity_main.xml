@@ -20,44 +20,42 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/_30sdp"
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_gravity="center">
 
                 <TextView
                     android:id="@+id/textView12"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Ha Noi, "
                     android:textAlignment="textEnd"
                     android:textColor="@color/white"
-                    android:textSize="25sp" />
+                    android:textSize="@dimen/_20ssp" />
 
                 <TextView
                     android:id="@+id/textView10"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Viet Nam"
                     android:textAlignment="textStart"
                     android:textColor="@color/white"
-                    android:textSize="25sp" />
-
+                    android:textSize="@dimen/_20ssp" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_160sdp"
                 android:layout_gravity="center"
-                android:layout_margin="16dp"
-                app:srcCompat="@drawable/cloudy_sunny" />
+                android:layout_margin="@dimen/_16sdp"
+                app:srcCompat="@drawable/few_clouds" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -66,59 +64,49 @@
                 android:text="30℃"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="60sp"
+                android:textSize="@dimen/_50sdp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sunny"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="30sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sunny"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_20ssp" />
 
                 <TextView
                     android:id="@+id/textViewMinTemp"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:layout_weight="1"
-                    android:text="Min: 24℃"
-                    android:textAlignment="textEnd"
+                    android:layout_marginLeft="@dimen/_8sdp"
+                    android:text="24°/"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/_20ssp" />
 
                 <TextView
                     android:id="@+id/textViewMaxTemp"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_weight="1"
-                    android:text="Max: 32℃"
+                    android:text="32°"
                     android:textAlignment="textStart"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/_20ssp" />
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_launcher_background" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/_16sdp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -132,36 +120,34 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Today"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginLeft="@dimen/_16sdp"
                         android:textAlignment="textStart"
-                        android:textColor="@color/white"
-                        android:textSize="25sp" />
+                        android:textColor="@color/yellow"
+                        android:textSize="@dimen/_16ssp" />
 
                     <TextView
                         android:id="@+id/next7Day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginRight="@dimen/_16sdp"
                         android:text="Next 7-day"
                         android:textAlignment="textEnd"
                         android:textColor="@color/white"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/_16ssp" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycleViewTest"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp" />
-
+                            android:id="@+id/rv_hourly"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clipToPadding="false"
+                            android:orientation="horizontal"/>
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:visibility="invisible"
@@ -172,7 +158,7 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="@dimen/_70sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/scrollView3">
@@ -180,12 +166,12 @@
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_gravity="bottom"
             app:backgroundTint="@color/light_purple"
-            app:fabCradleMargin="8dp"
-            app:fabCradleRoundedCornerRadius="50dp"
-            app:fabCradleVerticalOffset="6dp">
+            app:fabCradleMargin="@dimen/_8sdp"
+            app:fabCradleRoundedCornerRadius="@dimen/_50sdp"
+            app:fabCradleVerticalOffset="@dimen/_6sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -201,7 +187,7 @@
 
                     <ImageView
                         android:id="@+id/search_appBar_icon"
-                        android:layout_width="20dp"
+                        android:layout_width="@dimen/_20sdp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@drawable/ripple_effect"
@@ -219,7 +205,7 @@
 
                     <ImageView
                         android:id="@+id/home_appBar_icon"
-                        android:layout_width="20dp"
+                        android:layout_width="@dimen/_20sdp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@drawable/ripple_effect"
@@ -238,8 +224,8 @@
 
                     <ImageView
                         android:id="@+id/invisible_appBar_icon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
                         android:background="@drawable/ripple_effect"
                         android:clickable="true"
@@ -258,7 +244,7 @@
                     <ImageView
                         android:id="@+id/favor_appBar_icon"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
+                        android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
                         android:background="@drawable/ripple_effect"
                         android:clickable="true"
@@ -275,8 +261,8 @@
 
                     <ImageView
                         android:id="@+id/account_appBar_icon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
                         android:background="@drawable/ripple_effect"
                         android:clickable="true"
@@ -289,14 +275,14 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_margin="8dp"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_margin="@dimen/_8sdp"
             android:contentDescription="Enable vitural assitant"
             android:src="@drawable/ai_icon"
             app:backgroundTint="@color/light_purple"
-            app:fabCustomSize="48dp"
+            app:fabCustomSize="@dimen/_48sdp"
             app:layout_anchor="@id/bottomAppBar"
-            app:maxImageSize="22dp"
+            app:maxImageSize="@dimen/_22sdp"
             app:tint="@color/dark_purple" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

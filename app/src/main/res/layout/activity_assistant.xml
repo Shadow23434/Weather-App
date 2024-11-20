@@ -109,6 +109,7 @@
         android:paddingStart="@dimen/_16sdp"
         android:paddingEnd="@dimen/_16sdp"
         android:textColorHint="@color/grey"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/mic_layout"
         app:layout_constraintStart_toStartOf="parent"/>

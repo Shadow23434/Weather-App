@@ -17,65 +17,66 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/_16sdp">
 
             <TextView
                 android:id="@+id/textViewHiUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/_16sdp"
                 android:text="Hi, Admin!"
                 android:textColor="@color/white"
-                android:textSize="28sp" />
+                android:textSize="@dimen/_28ssp" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:text="Search your city"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/_18ssp" />
 
             <EditText
                 android:id="@+id/editTextSearch"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_16sdp"
+                android:layout_marginBottom="@dimen/_16sdp"
                 android:background="@drawable/edittext_bg"
                 android:drawableStart="@drawable/search"
-                android:drawablePadding="16dp"
+                android:drawablePadding="@dimen/_16sdp"
+                android:textColor="@color/black"
+                android:ems="10"
                 android:focusableInTouchMode="true"
+                android:hint="Search..."
                 android:inputType="text"
                 android:maxLines="1"
+                android:padding="@dimen/_10sdp"
                 android:scrollHorizontally="true"
-                android:ems="10"
-                android:hint="Search..."
-                android:padding="10dp"
                 android:textColorHint="@color/grey" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="@dimen/_100sdp"
                 android:background="@drawable/banner_hourly_bg">
 
                 <TextView
                     android:id="@+id/textCountry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:text="Viet Nam"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/_18ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -84,12 +85,12 @@
                     android:id="@+id/textCity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginBottom="@dimen/_16sdp"
                     android:text="Ha Noi"
                     android:textColor="@color/white"
-                    android:textSize="30sp"
+                    android:textSize="@dimen/_30ssp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/textLookLike"
                     app:layout_constraintStart_toStartOf="parent"
@@ -99,33 +100,33 @@
                     android:id="@+id/textLookLike"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginBottom="@dimen/_8sdp"
                     android:text="Sunny"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/_18ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="134dp"
-                    android:layout_height="68dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="26dp"
+                    android:layout_width="@dimen/_134sdp"
+                    android:layout_height="@dimen/_68sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginEnd="@dimen/_26sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/cloudy_sunny" />
+                    app:srcCompat="@drawable/few_clouds" />
 
                 <TextView
                     android:id="@+id/texttemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_8sdp"
                     android:text="30°C"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -134,19 +135,19 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_marginTop="@dimen/_16sdp"
                 android:background="@drawable/banner_hourly_bg">
 
                 <TextView
                     android:id="@+id/textCountry2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:text="Viet Nam"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/_18ssp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -155,12 +156,12 @@
                     android:id="@+id/textCity2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginBottom="@dimen/_16sdp"
                     android:text="Ha Noi"
                     android:textColor="@color/white"
-                    android:textSize="30sp"
+                    android:textSize="@dimen/_30ssp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/textLookLike2"
                     app:layout_constraintStart_toStartOf="parent"
@@ -170,33 +171,33 @@
                     android:id="@+id/textLookLike2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginBottom="@dimen/_8sdp"
                     android:text="Sunny"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/_18ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
                     android:id="@+id/imageView2"
-                    android:layout_width="134dp"
-                    android:layout_height="68dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="26dp"
+                    android:layout_width="@dimen/_134sdp"
+                    android:layout_height="@dimen/_68sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginEnd="@dimen/_26sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/cloudy_sunny" />
+                    app:srcCompat="@drawable/few_clouds" />
 
                 <TextView
                     android:id="@+id/texttemp2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_8sdp"
                     android:text="30°C"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/_16ssp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -206,7 +207,7 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="@dimen/_70sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/scrollView2">
@@ -214,12 +215,12 @@
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_gravity="bottom"
             app:backgroundTint="@color/light_purple"
-            app:fabCradleMargin="8dp"
-            app:fabCradleRoundedCornerRadius="50dp"
-            app:fabCradleVerticalOffset="6dp">
+            app:fabCradleMargin="@dimen/_8sdp"
+            app:fabCradleRoundedCornerRadius="@dimen/_50sdp"
+            app:fabCradleVerticalOffset="@dimen/_6sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -235,7 +236,7 @@
 
                     <ImageView
                         android:id="@+id/search_appBar_icon"
-                        android:layout_width="20dp"
+                        android:layout_width="@dimen/_20sdp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:clickable="true"
@@ -253,7 +254,7 @@
 
                     <ImageView
                         android:id="@+id/home_appBar_icon"
-                        android:layout_width="20dp"
+                        android:layout_width="@dimen/_20sdp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:clickable="true"
@@ -272,8 +273,8 @@
 
                     <ImageView
                         android:id="@+id/invisible_appBar_icon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
                         android:visibility="invisible"
                         android:clickable="true"
@@ -292,7 +293,7 @@
                     <ImageView
                         android:id="@+id/favor_appBar_icon"
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
+                        android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
                         android:clickable="true"
                         android:focusable="true"
@@ -309,8 +310,8 @@
 
                     <ImageView
                         android:id="@+id/account_appBar_icon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
                         android:layout_gravity="center"
                         android:clickable="true"
                         android:focusable="true"
@@ -323,14 +324,14 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_margin="8dp"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_margin="@dimen/_8sdp"
             android:contentDescription="Enable vitural assitant"
             android:src="@drawable/ai_icon"
             app:tint="@color/dark_purple"
             app:backgroundTint="@color/light_purple"
-            app:fabCustomSize="48dp"
+            app:fabCustomSize="@dimen/_48sdp"
             app:layout_anchor="@id/bottomAppBar"
-            app:maxImageSize="22dp" />
+            app:maxImageSize="@dimen/_22sdp" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
