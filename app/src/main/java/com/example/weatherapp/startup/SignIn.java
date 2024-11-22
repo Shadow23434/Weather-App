@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.R;
 import com.example.weatherapp.activities.MainActivity;
-import com.example.weatherapp.database.CreateDatabase;
+//import com.example.weatherapp.database.CreateDatabase;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -76,7 +76,7 @@ public class SignIn extends AppCompatActivity {
             finish();
         }
 //      Login Email and Password
-        CreateDatabase MyDB = new CreateDatabase(this);
+//        CreateDatabase MyDB = new CreateDatabase(this);
         EditText emailuser = findViewById(R.id.editEmailAddressSignIn);
         EditText password = findViewById(R.id.editPasswordSignIn);
         Button btnSignIn = findViewById(R.id.btnSignIn);

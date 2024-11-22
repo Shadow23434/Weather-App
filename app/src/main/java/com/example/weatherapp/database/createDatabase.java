@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class CreateDatabase extends SQLiteOpenHelper {
+class CreateDatabase extends SQLiteOpenHelper {
     private static String dbname = "Login.db";
     private static String dbTable = "Users";
     private static String version = "1";

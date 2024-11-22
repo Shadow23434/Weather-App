@@ -9,39 +9,45 @@
     tools:context=".activities.AccountActivity">
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/avatar_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.007"
+        app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.004"
+        app:layout_constraintVertical_bias="0.02"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="138dp"
-        android:layout_height="43dp"
+        android:id="@+id/Full_name"
+        android:layout_width="@dimen/_138sdp"
+        android:layout_height="@dimen/_43ssp"
+        android:fontFamily="sans-serif-black"
         android:text="Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#FBFBFB"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.206"
-        app:layout_constraintStart_toEndOf="@+id/imageView6"
+        app:layout_constraintStart_toEndOf="@+id/avatar_user"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.046" />
 
     <LinearLayout
-        android:layout_width="351dp"
-        android:layout_height="250dp"
+        android:id="@+id/linearLayout2"
+        android:layout_width="@dimen/_300sdp"
+        android:layout_height="@dimen/_250sdp"
         android:background="@drawable/linear_background"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.39">
+        app:layout_constraintTop_toBottomOf="@+id/avatar_user"
+        app:layout_constraintVertical_bias="0.172">
 
         <TextView
             android:id="@+id/textView6"
@@ -58,21 +64,110 @@
         <Button
             android:id="@+id/change_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="@dimen/_3sdp"
+            android:fontFamily="sans-serif-black"
             android:text="Change Password"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="20sp"
             app:cornerRadius="32dp"
             app:icon="@drawable/plus" />
+
+        <Button
+            android:id="@+id/btnMyAccount"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="@dimen/_3sdp"
+            android:fontFamily="sans-serif-black"
+            android:text="My Account"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="20sp"
+            app:cornerRadius="32dp"
+            app:icon="@drawable/plus" />
+
+        <Button
+            android:id="@+id/btnTwo_FactorAuth"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="@dimen/_3sdp"
+            android:fontFamily="sans-serif-black"
+            android:text="Two-Factor Authentication"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="20sp"
+            app:cornerRadius="32dp"
+            app:icon="@drawable/plus" />
+
+        <Button
+            android:id="@+id/btnLogOut"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:fontFamily="sans-serif-black"
+            android:text="LogOut"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="20sp"
+            app:cornerRadius="32dp" />
+
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnLogOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LogOut"
-        app:cornerRadius="32dp"
-        tools:layout_editor_absoluteX="103dp"
-        tools:layout_editor_absoluteY="647dp" />
+    <LinearLayout
+        android:layout_width="@dimen/_300sdp"
+        android:layout_height="@dimen/_150sdp"
+        android:background="@drawable/linear_background"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.345">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#4D3B81"
+            android:fontFamily="sans-serif-medium"
+            android:text="More"
+            android:textAlignment="textStart"
+            android:textColor="#FDFDFD"
+            android:textSize="24sp"
+            android:typeface="sans" />
+
+        <Button
+            android:id="@+id/btnHelpSupport"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="@dimen/_3sdp"
+            android:fontFamily="sans-serif-black"
+            android:text="Help Support"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="20sp"
+            app:cornerRadius="32dp"
+            app:icon="@drawable/plus" />
+
+        <Button
+            android:id="@+id/btnAboutApp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="@dimen/_3sdp"
+            android:fontFamily="sans-serif-black"
+            android:text="About App"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="20sp"
+            app:cornerRadius="32dp"
+            app:icon="@drawable/plus" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
