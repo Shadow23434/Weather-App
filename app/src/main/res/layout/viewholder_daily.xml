@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/_8sdp"
-    android:layout_marginBottom="@dimen/_8sdp">
+    android:layout_marginTop="@dimen/_4sdp"
+    android:layout_marginBottom="@dimen/_4sdp">
 
     <TextView
         android:id="@+id/day"
@@ -35,6 +35,8 @@
         android:layout_height="wrap_content"
         android:text="Few clouds"
         android:textColor="@color/white"
+        android:maxEms="7"
+        android:textAlignment="viewStart"
         android:layout_marginStart="@dimen/_8sdp"
         android:textSize="@dimen/_12ssp"
         app:layout_constraintStart_toEndOf="@id/weather_icon"

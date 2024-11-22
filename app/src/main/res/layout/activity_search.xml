@@ -44,7 +44,7 @@
                 android:textSize="@dimen/_18ssp" />
 
             <EditText
-                android:id="@+id/editTextSearch"
+                android:id="@+id/edit_txt_search"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_16sdp"

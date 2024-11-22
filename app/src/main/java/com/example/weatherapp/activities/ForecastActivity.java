@@ -1,11 +1,14 @@
 package com.example.weatherapp.activities;
 
+import static java.lang.Math.round;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -13,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
 import com.example.weatherapp.daily.Daily;
@@ -21,6 +25,7 @@ import com.example.weatherapp.hourly.Hourly;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.time.LocalDate;
 import java.time.format.TextStyle;
@@ -34,8 +39,7 @@ import okhttp3.Response;
 public class ForecastActivity extends AppCompatActivity {
     private RecyclerView.Adapter dailyAdapter;
     private RecyclerView rvDaily;
-
-    private String city = "HaNoi";
+    private String city;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +52,15 @@ public class ForecastActivity extends AppCompatActivity {
 
     private void initRvDaily() {
        ArrayList<Daily> dailyArrayList = new ArrayList<>();
+       city = getIntent().getStringExtra("city");
 
-       // Fetching API
-        fetchWeatherData(dailyArrayList);
+       if (city != null) {
+           Log.e("Main Intent: ", "city = " + city);
+           // Fetching API
+            fetchWeatherData(dailyArrayList);
+       } else {
+           Log.e("Main Intent: ", "city is null");
+       }
 
        rvDaily = findViewById(R.id.rv_7days);
        rvDaily.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -81,13 +91,41 @@ public class ForecastActivity extends AppCompatActivity {
 
                         String icon = dailyData.getJSONObject("weather").getString("icon");
                         String description = dailyData.getJSONObject("weather").getString("description");
-                        Double maxTemp = dailyData.getDouble("high_temp");
-                        Double minTemp = dailyData.getDouble("low_temp");
+                        Double d_max_temp = dailyData.getDouble("high_temp");
+                        Double d_min_temp = dailyData.getDouble("low_temp");
+                        int max_temp = (int) round(d_max_temp);
+                        int min_temp = (int) round(d_min_temp);
 
-                        // tommorow
+                        int pop = dailyData.getInt("pop" );
+                        int rh = dailyData.getInt("rh");
+                        Double wind_spd_ms = dailyData.getDouble("wind_spd");
+                        Double wind_spd_kmh = round(wind_spd_ms * 3.6) / 100.0;
+                        int resId = getResources().getIdentifier(icon, "drawable", getPackageName());
 
-                        // next 6-day
-                        if (i>1) dailyArrayList.add(new Daily(day, icon, description, (int) Math.round(maxTemp), (int) Math.round(minTemp)));
+                        // Tommorow
+                        if (i == 1) {
+                            ImageView weatherIcon = (ImageView) findViewById(R.id.weather_icon);
+                            TextView weatherDescription = (TextView) findViewById(R.id.weather_description);
+                            TextView maxTemp = (TextView) findViewById(R.id.max_temp);
+                            TextView minTemp = (TextView) findViewById(R.id.min_temp);
+                            TextView precipitation = (TextView) findViewById(R.id.precipitation);
+                            TextView humidity = (TextView) findViewById(R.id.humidity);
+                            TextView windSpeed = (TextView) findViewById(R.id.wind_speed);
+
+                            runOnUiThread(() -> {
+                                Glide.with(this).load(resId).into(weatherIcon);
+                                weatherDescription.setText(description);
+                                maxTemp.setText(max_temp + "°/");
+                                minTemp.setText(min_temp + "°");
+
+                                precipitation.setText(pop + "%");
+                                humidity.setText(rh + "%");
+                                windSpeed.setText(wind_spd_kmh.toString() + " km/h");
+                            });
+                        }
+
+                        // Next 6-day
+                        if (i>1) dailyArrayList.add(new Daily(day, icon, description, max_temp, min_temp));
                     }
                     runOnUiThread(() -> dailyAdapter.notifyDataSetChanged());
                 }
@@ -104,7 +142,9 @@ public class ForecastActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ForecastActivity.this, MainActivity.class));
+                Intent intent = new Intent(ForecastActivity.this, MainActivity.class);
+                intent.putExtra("city", city);
+                startActivity(intent);
             }
         });
     }

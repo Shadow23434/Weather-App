@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="@dimen/_20sdp"
-        android:background="@drawable/banner_hourly_bg"
+        android:background="@drawable/banner_bg"
         app:layout_constraintTop_toBottomOf="@id/back_btn"
         app:layout_constraintStart_toStartOf="@id/back_btn"
         app:layout_constraintEnd_toEndOf="@id/visible_btn">
@@ -66,9 +66,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tommorow"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:layout_marginStart="@dimen/_16sdp"
-            android:textSize="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:textSize="@dimen/_18sdp"
             android:textColor="@color/white"/>
 
         <LinearLayout
@@ -78,10 +78,10 @@
 
             <ImageView
                 android:id="@+id/weather_icon"
-                android:layout_width="@dimen/_90sdp"
-                android:layout_height="@dimen/_90sdp"
+                android:layout_width="@dimen/_106sdp"
+                android:layout_height="@dimen/_106sdp"
                 android:layout_margin="@dimen/_16sdp"
-                android:background="@drawable/few_clouds"/>
+                android:background="@android:color/transparent"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                     android:text="Sunny"
                     android:textStyle="bold"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_25ssp" />
+                    android:textSize="@dimen/_22ssp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -130,7 +130,9 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="@dimen/_16sdp">
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -221,6 +223,7 @@
         android:id="@+id/rv_7days"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_8sdp"
         android:nestedScrollingEnabled="false"
         app:layout_constraintTop_toBottomOf="@id/tommorow_view"
