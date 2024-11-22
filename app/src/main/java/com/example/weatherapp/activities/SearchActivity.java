@@ -2,6 +2,8 @@ package com.example.weatherapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,13 +20,37 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        onEnterEditSearch();
+
         disableFocusEditText();
         onClickBottomAppBar();
         onClickFloatingButton();
     }
 
+    private void onEnterEditSearch() {
+        EditText editText = (EditText) findViewById(R.id.edit_txt_search);
+        if (editText.getText() != null) {
+            editText.setOnKeyListener(new View.OnKeyListener() {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                        // Perform action on key press
+                        Log.e("Search: ", "Search for " + String.valueOf(editText.getText()));
+                        Intent intent = new Intent(SearchActivity.this, MainActivity.class);
+                        intent.putExtra("editTextSearch", editText.getText().toString());
+                        startActivity(intent);
+
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        } else {
+            Log.e("Search: ", "EditText is null");
+        }
+    }
+
     private void disableFocusEditText() {
-        EditText editText = findViewById(R.id.editTextSearch);
+        EditText editText = findViewById(R.id.edit_txt_search);
         editText.clearFocus();
     }
 

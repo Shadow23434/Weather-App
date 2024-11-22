@@ -33,11 +33,6 @@
         android:id="@+id/chat_section"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:overScrollMode="never"
-        android:padding="@dimen/_20sdp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="@id/top_view"
         app:layout_constraintTop_toBottomOf="@+id/back_btn"/>
 
@@ -109,6 +104,7 @@
         android:paddingStart="@dimen/_16sdp"
         android:paddingEnd="@dimen/_16sdp"
         android:textColorHint="@color/grey"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/mic_layout"
         app:layout_constraintStart_toStartOf="parent"/>

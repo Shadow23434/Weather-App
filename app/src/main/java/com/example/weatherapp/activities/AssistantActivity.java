@@ -67,15 +67,8 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
         textget = findViewById(R.id.textget);
         editText = findViewById(R.id.edit_user_mess);
 
-        // Go back home
-        AppCompatImageView back_btn = (AppCompatImageView) findViewById(R.id.back_btn);
-        back_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AssistantActivity.this, MainActivity.class));
-            }
-        });
-        
+        goHome();
+
         chatModelArrayList = new ArrayList<>();
         chat_section= findViewById(R.id.chat_section);
         chatAdapter = new ChatAdapter(chatModelArrayList, this);
@@ -87,17 +80,7 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
 
         textToSpeech = new TextToSpeech(this, this);
 
-        // Send message
-        AppCompatImageView send_btn = (AppCompatImageView) findViewById(R.id.send_btn);
-        send_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chatModelArrayList.add(new ChatModel(editText.getText().toString(), USER));
-                chatAdapter.notifyDataSetChanged();
-                getResponse(editText.getText().toString());
-            }
-        });
-
+        onClickSendMessage();
         checkPermission();
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
@@ -201,6 +184,28 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
         });
     }
 
+    private void onClickSendMessage() {
+        AppCompatImageView send_btn = (AppCompatImageView) findViewById(R.id.send_btn);
+        send_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chatModelArrayList.add(new ChatModel(editText.getText().toString(), USER));
+                chatAdapter.notifyDataSetChanged();
+                getResponse(editText.getText().toString());
+            }
+        });
+    }
+
+    private void goHome() {
+        AppCompatImageView back_btn = (AppCompatImageView) findViewById(R.id.back_btn);
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AssistantActivity.this, MainActivity.class));
+            }
+        });
+    }
+
     @SuppressLint("ObsoleteSdkInt")
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -219,40 +224,9 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
         }
     }
 
-//    private void getResponse(String message) {
-//        String url = "https://generativelanguage.googleapis.com/v1beta/get?bid=178934&key=7aGUBUKKCj5ztv76&uid=[]&msg=" + message;
-//        String Base_URL = "https://generativelanguage.googleapis.com/v1beta";
-//
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(Base_URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-//        Call<MsgModel> call = retrofitAPI.getMessage(url);
-//
-//        call.enqueue(new Callback<MsgModel>() {
-//            @SuppressLint("NotifyDataSetChanged")
-//            @Override
-//            public void onResponse(Call<MsgModel> call, Response<MsgModel> response) {
-//                if (response.isSuccessful()) {
-//                    MsgModel model = response.body();
-//                    chatModelArrayList.add(new ChatModel(model.getCnt().toString(), ASSISTANT));
-//                    chatAdapter.notifyDataSetChanged();
-//                    speak(model.getCnt().toString());
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<MsgModel> call, Throwable t) {
-//                chatModelArrayList.add(new ChatModel("Something went wrong, please try again!", ASSISTANT));
-//                chatAdapter.notifyDataSetChanged();
-//            }
-//        });
-//    }
-
     private void getResponse(String message) {
         Log.e("GEMINI: ", "Connected!!!");
-        Log.e("GEMINI: ", message);
+        Log.e("GEMINI: ", "User:" + message);
         GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", BuildConfig.gemini_api);
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
         Content content = new Content.Builder().addText(message).build();
@@ -264,13 +238,13 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
                 new FutureCallback<GenerateContentResponse>() {
                     @Override
                     public void onSuccess(GenerateContentResponse result) {
-                        Log.e("GEMINI:  ", "fetching success");
+                        Log.e("GEMINI:  ", "Fetching successful");
                         chatModelArrayList.add(new ChatModel(result.getText().toString(), ASSISTANT));
                         Log.e("onSuccess: ", result.getText().toString());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                // Update your RecyclerView or any UI component here
+                                // Update your RecyclerView
                                 chatAdapter.notifyDataSetChanged();
                             }
                         });
@@ -279,12 +253,12 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
 
                     @Override
                     public void onFailure(Throwable t) {
-                        Log.e("GEMINI: ", "Fetching Error!!");
+                        Log.e("GEMINI: ", "Fetching Fail!!!");
+                        Log.e("Gemini: ", t.toString());
                         chatModelArrayList.add(new ChatModel("Something went wrong, please try again!", ASSISTANT));
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                // Update your RecyclerView or any UI component here
                                 chatAdapter.notifyDataSetChanged();
                             }
                         });

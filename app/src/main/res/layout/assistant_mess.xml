@@ -3,25 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/_4sdp">
+    android:layout_marginTop="@dimen/_8sdp"
+    android:layout_marginEnd="@dimen/_16sdp">
 
     <TextView
         android:id="@+id/assistant_mess"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxEms="15"
+        android:inputType="textMultiLine"
         android:background="@drawable/assistant_mess_bg"
-        android:padding="@dimen/_12sdp"
+        android:padding="@dimen/_8sdp"
+        android:textAlignment="viewStart"
         android:text="Assitant Message"
         android:textSize="@dimen/_13ssp"
         android:textColor="@color/white"
+        android:ellipsize="none"
+        android:scrollHorizontally="false"
         app:layout_constraintStart_toEndOf="@+id/assistant_logo"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.7"/>
+        app:layout_constraintTop_toTopOf="@id/assistant_logo" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/assistant_logo"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
+        android:layout_marginStart="@dimen/_8sdp"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/assistant_logo"
