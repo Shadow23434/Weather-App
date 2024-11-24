@@ -1,173 +1,399 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back_ground"
+    android:background="@color/primary"
+    android:orientation="vertical"
     tools:context=".activities.AccountActivity">
 
-    <ImageView
-        android:id="@+id/avatar_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.095"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.02"
-        tools:srcCompat="@tools:sample/avatars" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/Full_name"
-        android:layout_width="@dimen/_138sdp"
-        android:layout_height="@dimen/_43ssp"
-        android:fontFamily="sans-serif-black"
-        android:text="Name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#FBFBFB"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.206"
-        app:layout_constraintStart_toEndOf="@+id/avatar_user"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.046" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="@dimen/_300sdp"
-        android:layout_height="@dimen/_250sdp"
-        android:background="@drawable/linear_background"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatar_user"
-        app:layout_constraintVertical_bias="0.172">
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:padding="14dp"
+            android:src="@drawable/back_btn" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Settings"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_24sdp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#272E5D"
-            android:fontFamily="sans-serif-medium"
-            android:text="Setting"
-            android:textAlignment="textStart"
-            android:textColor="#FDFDFD"
-            android:textSize="24sp"
-            android:typeface="sans" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/change_password"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="@dimen/_3sdp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="@dimen/_3sdp"
-            android:fontFamily="sans-serif-black"
-            android:text="Change Password"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="20sp"
-            app:cornerRadius="32dp"
-            app:icon="@drawable/plus" />
+            <ImageView
+                android:id="@+id/imageUser"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/bipeople_circle" />
 
-        <Button
-            android:id="@+id/btnMyAccount"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="@dimen/_3sdp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="@dimen/_3sdp"
-            android:fontFamily="sans-serif-black"
-            android:text="My Account"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="20sp"
-            app:cornerRadius="32dp"
-            app:icon="@drawable/plus" />
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="Name user"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnTwo_FactorAuth"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="@dimen/_3sdp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="@dimen/_3sdp"
-            android:fontFamily="sans-serif-black"
-            android:text="Two-Factor Authentication"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="20sp"
-            app:cornerRadius="32dp"
-            app:icon="@drawable/plus" />
+            <TextView
+                android:id="@+id/user_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Email user"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/btnLogOut"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:fontFamily="sans-serif-black"
-            android:text="LogOut"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="20sp"
-            app:cornerRadius="32dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/rounded_white"
+                android:orientation="vertical"
+                android:padding="15dp">
 
-    </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="@dimen/_300sdp"
-        android:layout_height="@dimen/_150sdp"
-        android:background="@drawable/linear_background"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintVertical_bias="0.345">
+                    <ImageView
+                        android:id="@+id/nightmode"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/night_mode"
+                        android:padding="12dp"
+                        android:src="@drawable/solarmoon_bold" />
 
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#4D3B81"
-            android:fontFamily="sans-serif-medium"
-            android:text="More"
-            android:textAlignment="textStart"
-            android:textColor="#FDFDFD"
-            android:textSize="24sp"
-            android:typeface="sans" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/nightmode"
+                        android:text="Night Mode"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnHelpSupport"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="@dimen/_3sdp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="@dimen/_3sdp"
-            android:fontFamily="sans-serif-black"
-            android:text="Help Support"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="20sp"
-            app:cornerRadius="32dp"
-            app:icon="@drawable/plus" />
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:switchMinWidth="@dimen/_50sdp" />
 
-        <Button
-            android:id="@+id/btnAboutApp"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="@dimen/_3sdp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="@dimen/_3sdp"
-            android:fontFamily="sans-serif-black"
-            android:text="About App"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="20sp"
-            app:cornerRadius="32dp"
-            app:icon="@drawable/plus" />
+                </RelativeLayout>
+                <!-- Dark Light   -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
 
-    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/nightmode2"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/rounded_private_account"
+                        android:padding="12dp"
+                        android:src="@drawable/ionnotifcations" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/nightmode2"
+                        android:text="Notification"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:switchMinWidth="@dimen/_50sdp"
+                        android:theme="@style/nightModeSwitch" />
+
+                </RelativeLayout>
+                <!--Dark Light   -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/nightmode3"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/rounded_back_notifications"
+                        android:padding="12dp"
+                        android:src="@drawable/solarmoon_bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/nightmode3"
+                        android:text="Private Account"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:switchMinWidth="50dp"
+                        android:theme="@style/nightModeSwitch" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/rounded_white"
+                android:orientation="vertical"
+                android:padding="15sp">
+
+                <RelativeLayout
+                    android:id="@+id/btnChangePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/nightmode7"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/pengaturan"
+                        android:padding="12dp"
+                        android:src="@drawable/material_symbolslock" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/nightmode7"
+                        android:text="Change password"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/baseline_navigate_next_24" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/nightmode8"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/textsize"
+                        android:padding="12dp"
+                        android:src="@drawable/formkittext" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/nightmode8"
+                        android:text="Text size"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/baseline_navigate_next_24" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/nightmode9"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/language"
+                        android:padding="12dp"
+                        android:src="@drawable/material_symbolslanguage" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/nightmode9"
+                        android:text="Languages"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/baseline_navigate_next_24" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/rounded_white"
+                android:orientation="vertical"
+                android:padding="15sp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/nightmode10"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/send"
+                        android:padding="12dp"
+                        android:src="@drawable/material_symbolslanguage" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/nightmode10"
+                        android:text="Send us messenger"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/baseline_navigate_next_24" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/nightmode11"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/rounded_back_notifications"
+                        android:padding="12dp"
+                        android:src="@drawable/mdiabout" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/nightmode11"
+                        android:text="About us"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/baseline_navigate_next_24" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/btnLogOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/nightmode12"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/faqs"
+                        android:padding="12dp"
+                        android:src="@drawable/majesticonslogout" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/nightmode12"
+                        android:text="LogOut"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/baseline_navigate_next_24" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -23,4 +23,10 @@
     <color name="assistant_bg_color">#FF3700B3</color>
     <color name="dark_blue_shade1">#8D2162</color>
     <color name="dark_blue_shade2">#17388E</color>
+    <color name="primary">#2D0078</color>
+    <color name="secondary">#7F7F7F</color>
+    <color name="night_mode">#005BBB</color>
+    <color name="notifications">#4700C5</color>
+    <color name="security">#949292</color>
+    <color name="private_account">#FFEB3B</color>
 </resources>

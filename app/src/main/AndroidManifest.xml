@@ -18,6 +18,13 @@
         tools:targetApi="34">
 
         <activity
+            android:name=".profile.UploadProfile"
+            android:exported="false" />
+        <activity
+            android:name=".profile.ChangePassword"
+            android:exported="false" />
+
+        <activity
             android:name=".activities.ForecastActivity"
             android:exported="false" />
         <activity
@@ -49,5 +56,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Cloudinary API -->
+        <meta-data
+            android:name="CLOUDINARY_URL"
+            android:value="CLOUDINARY_URL=cloudinary://532541495139642:MlzXonAAH1Q6xOEu6jWk5SRdWLk@ddehaxisw"/>
     </application>
 </manifest>

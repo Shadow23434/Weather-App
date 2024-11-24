@@ -6,4 +6,21 @@
     </style>
 
     <style name="Theme.WeatherApp" parent="Base.Theme.WeatherApp" />
+    <style name="nightModeSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/night_mode</item>
+        <item name="colorSwitchThumbNormal">@color/white</item>
+        <item name="android:colorForeground">#99ffffff</item>
+    </style>
+
+    <style name="notifikasiSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/notifications</item>
+        <item name="colorSwitchThumbNormal">@color/white</item>
+        <item name="android:colorForeground">#99ffffff</item>
+    </style>
+
+    <style name="privateAccountActivated" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/notifications</item>
+        <item name="colorSwitchThumbNormal">@color/white</item>
+        <item name="android:colorForeground">#99ffffff</item>
+    </style>
 </resources>
