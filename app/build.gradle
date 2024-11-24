@@ -64,8 +64,10 @@ dependencies {
     implementation("com.google.guava:guava:31.0.1-android")
     implementation("org.reactivestreams:reactive-streams:1.0.4")
 
-    // Animation
+    // Image animation
     implementation "com.airbnb.android:lottie:5.2.0"
+    // Text animation
+    implementation 'com.github.NitishGadangi:TypeWriter-TextView:v1.3'
 
     // Scalable size unit (support for different screen sizes)
     implementation 'com.intuit.sdp:sdp-android:1.0.6'

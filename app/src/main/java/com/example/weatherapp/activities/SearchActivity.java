@@ -32,13 +32,12 @@ public class SearchActivity extends AppCompatActivity {
         if (editText.getText() != null) {
             editText.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                         // Perform action on key press
                         Log.e("Search: ", "Search for " + String.valueOf(editText.getText()));
                         Intent intent = new Intent(SearchActivity.this, MainActivity.class);
                         intent.putExtra("editTextSearch", editText.getText().toString());
                         startActivity(intent);
-
                         return true;
                     }
                     return false;

@@ -3,8 +3,6 @@ package com.example.weatherapp.activities;
 import static java.lang.Math.round;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -19,7 +17,6 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,17 +33,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
-import com.example.weatherapp.daily.Daily;
+import com.example.weatherapp.daily.WeatherData;
+import com.example.weatherapp.daily.WeatherDataCallback;
 import com.example.weatherapp.hourly.HourlyAdapter;
 import com.example.weatherapp.hourly.Hourly;
+import com.google.ai.client.generativeai.GenerativeModel;
+import com.google.ai.client.generativeai.java.GenerativeModelFutures;
+import com.google.ai.client.generativeai.type.BlockThreshold;
+import com.google.ai.client.generativeai.type.Content;
+import com.google.ai.client.generativeai.type.GenerateContentResponse;
+import com.google.ai.client.generativeai.type.GenerationConfig;
+import com.google.ai.client.generativeai.type.HarmCategory;
+import com.google.ai.client.generativeai.type.RequestOptions;
+import com.google.ai.client.generativeai.type.SafetySetting;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.nitish.typewriterview.TypeWriterView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-<<<<<<< HEAD
-=======
-import org.w3c.dom.Text;
->>>>>>> cebf38352e86bea8f75435cdc5a51ce844dc777d
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -54,24 +61,40 @@ import okhttp3.Response;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 
-public class MainActivity extends AppCompatActivity implements LocationListener {
+public class MainActivity extends AppCompatActivity implements LocationListener, WeatherDataCallback {
     private RecyclerView.Adapter adapterHourly;
     private RecyclerView rvHourly;
-    LocationManager locationManager; // request location
+    private LocationManager locationManager; // request location
     private AlertDialog enableGPSDialog; // prompt user to enable GPS service
     private AlertDialog openSettingDialog; // prompt user to open Setting for location service
     private int retryCount = 0;
     private static final int MAX_RETRY_ATTEMPTS = 3;
-    String city;
+    private String city; // a string has no space
+    private WeatherData weatherData;
+    private String currentLocation;
+    private String currentTemperature;
+    private String weatherCondition;
+    private boolean isNight;
+    private TypeWriterView shortWeatherDescription;
+    ImageView dropDownIcon;
+    ImageView dropUpIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dropDownIcon = (ImageView) findViewById(R.id.ic_drop_down);
+        dropUpIcon = (ImageView) findViewById(R.id.ic_drop_up);
+        shortWeatherDescription = findViewById(R.id.short_weather_description);
+        weatherData = new WeatherData();
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
 
         // Go back from forecast
@@ -81,13 +104,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         if (cityForecast != null) {
             city = cityForecast;
-            fetchDailyWeatherData();
             initRvHourly();
         }
         else if (citySearch != null) {
-            Log.e("Forcast Intent: ", "City is null");
+            Log.e("Forecast Intent: ", "City is null");
             city = citySearch;
-            fetchDailyWeatherData();
             initRvHourly();
         }
         else {
@@ -95,15 +116,179 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             getCurrentLocation();
         }
 
+        onClickDropUpIcon();
+        onClickDropDownIcon();
         onClickLocationIcon();
         onClickBottomAppBar();
         onClickFloatingButton();
         goNext7Day();
     }
 
+    private void onClickDropDownIcon() {
+        dropDownIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("onClickDropDownIcon: ", "OK");
+                shortWeatherDescription.setVisibility(View.VISIBLE);
+                dropDownIcon.setVisibility(View.INVISIBLE);
+                dropUpIcon.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void onClickDropUpIcon() {
+        dropUpIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("onClickDropUpIcon: ", "OK");
+                shortWeatherDescription.setVisibility(View.GONE);
+                dropUpIcon.setVisibility(View.INVISIBLE);
+                dropDownIcon.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void generateShortWeatherDescription() {
+        SafetySetting safetySetting = new SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH);
+        GenerationConfig.Builder builder = new GenerationConfig.Builder();
+        builder.temperature = 1.0f;
+        builder.topK = 40;
+        builder.topP = 0.95f;
+        GenerationConfig generationConfig = builder.build();
+        RequestOptions requestOptions = new RequestOptions();
+
+        Content systemInstruction = new Content.Builder()
+                .addText("You are a weather assistant. Generate a very short, but whimsical description of the weather, offer practical tips based on the weather conditions, such as clothing suggestions, travel precautions, or outdoor activity recommendations, based on the given information")
+                .build();
+
+        GenerativeModel gm = new GenerativeModel(
+                "gemini-1.5-flash",
+                BuildConfig.gemini_api,
+                generationConfig,
+                Collections.singletonList(safetySetting),
+                requestOptions,
+                null,
+                null,
+                systemInstruction
+        );
+
+        GenerativeModelFutures model = GenerativeModelFutures.from(gm);
+        Content content = new Content.Builder().addText(
+                        String.format("location = %s;\n", currentLocation) +
+                        String.format("currentTemperature = %s;\n", currentTemperature) +
+                        String.format("weatherCondition = %s;\n", weatherCondition) +
+                        String.format("isNight = %b", isNight)
+        ).build();
+        Executor executor = Executors.newSingleThreadExecutor();
+
+        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
+        Futures.addCallback(
+                response,
+                new FutureCallback<GenerateContentResponse>() {
+                    @Override
+                    public void onSuccess(GenerateContentResponse result) {
+                        Log.e("ShortWeatherDescription:  ", "Fetching successful");
+                        runOnUiThread(() -> shortWeatherDescription.animateText(result.getText()));
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.e("ShortWeatherDescription: ", "Fetching Fail!!!");
+                        Log.e("ShortWeatherDescription: ", t.toString());
+                        runOnUiThread(() -> shortWeatherDescription.animateText("Sorry, something went wrong"));
+                    }
+                },
+                executor);
+    }
+
+    private void initRvHourly() {
+        ArrayList<Hourly> items = new ArrayList<>();
+
+        rvHourly = findViewById(R.id.rv_hourly);
+        rvHourly.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        adapterHourly = new HourlyAdapter(items);
+        rvHourly.setAdapter(adapterHourly);
+
+        if (!city.isEmpty() && city != null) {
+            fetchDailyWeatherData();
+            fetchHourlyWeatherData(items, () -> {
+                    Log.e("Current Location = ", currentLocation);
+                    Log.e("Current Temperature = ", currentTemperature);
+                    if (currentLocation != null &&  currentTemperature!= null && weatherCondition != null) {
+                        generateShortWeatherDescription();
+                    }
+                    else Log.e("short weather description", "error");
+            });
+        }
+        else {
+            Log.e("City: ", "city not found");
+            Toast.makeText(this, "Please enter the right name and try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void fetchHourlyWeatherData(ArrayList<Hourly> items, Runnable onComplete) {
+        // Hourly weather data
+        String url = String.format("https://api.weatherbit.io/v2.0/forecast/hourly?city=%s&key=%s&hours=12", city, BuildConfig.weather_api);
+        Log.e("Fetching hourly API: ", url);
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+
+        new Thread(() -> {
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    JSONArray data = jsonObject.getJSONArray("data");
+
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject hourlyData = data.getJSONObject(i);
+                        String time = hourlyData.getString("timestamp_local");
+                        time = time.substring(11, 16);
+                        Double d_temperature = hourlyData.getDouble("temp");
+                        int temperature = (int) Math.round(d_temperature);
+                        String icon = hourlyData.getJSONObject("weather").getString("icon");
+                        String description = hourlyData.getJSONObject("weather").getString("description");
+
+                        // Current hour
+                        if (i == 0) {
+                            String cityName = jsonObject.getString("city_name");
+                            int resId = getResources().getIdentifier(icon, "drawable", getPackageName());
+                            ImageView weatherIcon = (ImageView) findViewById(R.id.weather_icon);
+                            TextView temp = (TextView) findViewById(R.id.temp);
+                            TextView weatherDescription = (TextView) findViewById(R.id.weather_description);
+
+                            weatherData.setCurrentLocation(cityName);
+                            weatherData.setCurrentTemperature(String.valueOf(temperature));
+                            weatherData.setWeatherCondition(description);
+                            weatherData.setNight((icon.charAt(icon.length()-1) == 'n')? true : false);
+
+                            runOnUiThread( () -> {
+                                onWeatherDataFetched(weatherData);
+                                onComplete.run();
+                                Glide.with(this).load(resId).into(weatherIcon);
+                                temp.setText(temperature + "℃");
+                                weatherDescription.setText(description);
+                            });
+                        }
+
+                        // Next 11-hour
+                        if (i>0) items.add(new Hourly(time, temperature, icon));
+                    }
+                    if (items != null) runOnUiThread(() -> adapterHourly.notifyDataSetChanged());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Fetching hourly API: ", e.getMessage());
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show());
+            }
+        }).start();
+    }
+
     private void fetchDailyWeatherData() {
         String url = String.format("https://api.weatherbit.io/v2.0/forecast/daily?city=%s&key=%s", city, BuildConfig.weather_api);
-        Log.e("Fetching API: ", url);
+        Log.e("Fetching daily API: ", url);
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
@@ -137,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e("Fetching API: ", e.getMessage());
+                Log.e("Fetching daily API: ", e.getMessage());
                 runOnUiThread(() -> Toast.makeText(MainActivity.this, "Error fetching daily weather data", Toast.LENGTH_SHORT).show());
             }
         }).start();
@@ -257,75 +442,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         getCurrentLocation();
     }
 
-    private void initRvHourly() {
-        ArrayList<Hourly> items = new ArrayList<>();
-
-        // Fetching api here
-        if (city != "" && city != null) fetchHourlyWeatherData(items);
-        else {
-            Log.e("City: ", "city not found");
-            Toast.makeText(this, "Please enter the right name and try again.", Toast.LENGTH_SHORT).show();
-        }
-
-        rvHourly = findViewById(R.id.rv_hourly);
-        rvHourly.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        adapterHourly = new HourlyAdapter(items);
-        rvHourly.setAdapter(adapterHourly);
-    }
-
-    private void fetchHourlyWeatherData(ArrayList<Hourly> items) {
-        // Hourly weather data
-        String url = String.format("https://api.weatherbit.io/v2.0/forecast/hourly?city=%s&key=%s&hours=12", city, BuildConfig.weather_api);
-        Log.e("Fetching API: ", url);
-
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(url).build();
-
-        new Thread(() -> {
-            try {
-                Response response = client.newCall(request).execute();
-                if (response.isSuccessful() && response.body() != null) {
-                    String responseBody = response.body().string();
-                    JSONObject jsonObject = new JSONObject(responseBody);
-                    JSONArray data = jsonObject.getJSONArray("data");
-
-                    for (int i = 0; i < data.length(); i++) {
-                        JSONObject hourlyData = data.getJSONObject(i);
-                        String time = hourlyData.getString("timestamp_local");
-                        time = time.substring(11, 16);
-                        Double d_temperature = hourlyData.getDouble("temp");
-                        int temperature = (int) Math.round(d_temperature);
-                        String icon = hourlyData.getJSONObject("weather").getString("icon");
-                        String description = hourlyData.getJSONObject("weather").getString("description");
-
-                        // Current hour
-                        if (i == 0) {
-                            int resId = getResources().getIdentifier(icon, "drawable", getPackageName());
-                            ImageView weatherIcon = (ImageView) findViewById(R.id.weather_icon);
-                            TextView temp = (TextView) findViewById(R.id.temp);
-                            TextView weatherDescription = (TextView) findViewById(R.id.weather_description);
-
-                            runOnUiThread( () -> {
-                                Glide.with(this).load(resId).into(weatherIcon);
-                                temp.setText(temperature + "℃");
-                                weatherDescription.setText(description);
-                            });
-                        }
-
-                        // Next 11-hour
-                        if (i>0) items.add(new Hourly(time, temperature, icon));
-                    }
-                    runOnUiThread(() -> adapterHourly.notifyDataSetChanged());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("Fetching API: ", e.getMessage());
-                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show());
-            }
-        }).start();
-    }
-
     @NonNull
     private String getCountryName(String countryCode) {
         Locale locale = new Locale("", countryCode);
@@ -442,7 +558,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             Log.e("address: ", "address = " + address);
             city = formatCityName(address);
 
-            fetchDailyWeatherData();
+//            fetchDailyWeatherData();
             initRvHourly();
         } catch (Exception e) {
             e.printStackTrace();
@@ -483,6 +599,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         } else {
             Log.d("GetCurrentLocation", "Max retry attempts reached. Giving up.");
             Toast.makeText(this, "Failed to obtain location. Please try again later.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onWeatherDataFetched(@NonNull WeatherData weatherData) {
+        synchronized (this) {
+            currentLocation = weatherData.getCurrentLocation();
+            currentTemperature = weatherData.getCurrentTemperature();
+            weatherCondition = weatherData.getWeatherCondition();
+            isNight = weatherData.isNight();
         }
     }
 }

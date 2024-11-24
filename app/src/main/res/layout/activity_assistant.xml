@@ -96,10 +96,12 @@
         android:layout_marginRight="@dimen/_4sdp"
         android:layout_marginBottom="@dimen/_12sdp"
         android:background="@drawable/edittext_bg"
-        android:hint="Messenger..."
-        android:imeOptions="actionDone"
+        android:hint="Message..."
         android:importantForAutofill="no"
         android:inputType="text"
+        android:maxLines="1"
+        android:ems="10"
+        android:scrollHorizontally="true"
         android:textSize="@dimen/_13ssp"
         android:paddingStart="@dimen/_16sdp"
         android:paddingEnd="@dimen/_16sdp"
@@ -115,6 +117,8 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/edit_user_mess"
-        app:layout_constraintEnd_toStartOf="@+id/send_layout"/>
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

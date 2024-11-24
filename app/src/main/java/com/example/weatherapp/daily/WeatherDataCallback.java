@@ -1,2 +1,5 @@
-package com.example.weatherapp.daily;public class WeatherDataCallback {
+package com.example.weatherapp.daily;
+
+public interface WeatherDataCallback {
+    void onWeatherDataFetched(WeatherData weatherData);
 }
