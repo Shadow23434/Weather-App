@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.R;
 //import com.example.weatherapp.database.CreateDatabase;
+import com.example.weatherapp.activities.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,16 +23,21 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class SignUp extends AppCompatActivity {
 
     FirebaseAuth fAuth;
+    FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sign_up);
         fAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 //        CreateDatabase MyDB = new CreateDatabase(this);
         EditText edtFullName = findViewById(R.id.editFullNameSignUp);
         EditText edtEmail = findViewById(R.id.editEmailAddressSignUp);
@@ -80,6 +86,14 @@ public class SignUp extends AppCompatActivity {
                                             public void onSuccess(Void unused) {
                                                 Toast.makeText(SignUp.this, "Verification Email has been sent!!!", Toast.LENGTH_SHORT).show();
                                                 Toast.makeText(SignUp.this, "Register Successfully!!!", Toast.LENGTH_SHORT).show();
+
+                                                HashMap<String, String> map = new HashMap<>();
+                                                map.put("id", user.getUid());
+                                                map.put("name", strFullName);
+                                                map.put("profile", user.getPhotoUrl().toString());
+                                                map.put("email", strEmail);
+                                                map.put("password", strPassword);
+                                                database.getReference().child("user").child(user.getUid()).setValue(map);
                                                 Intent intent = new Intent(SignUp.this, SignIn.class);
                                                 startActivity(intent);
                                             }

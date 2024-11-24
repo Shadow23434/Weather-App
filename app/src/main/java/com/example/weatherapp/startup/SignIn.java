@@ -195,6 +195,7 @@ public class SignIn extends AppCompatActivity {
                             map.put("id", user.getUid());
                             map.put("name", user.getDisplayName());
                             map.put("profile", user.getPhotoUrl().toString());
+                            map.put("email", user.getEmail());
                             database.getReference().child("user").child(user.getUid()).setValue(map);
                             Intent intent = new Intent(SignIn.this, MainActivity.class);
                             startActivity(intent);

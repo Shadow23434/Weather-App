@@ -43,10 +43,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-<<<<<<< HEAD
-=======
+
 import org.w3c.dom.Text;
->>>>>>> cebf38352e86bea8f75435cdc5a51ce844dc777d
+
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
