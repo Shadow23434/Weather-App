@@ -3,6 +3,7 @@ package com.example.weatherapp.startup;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,7 +46,7 @@ public class SignIn extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseDatabase database;
     GoogleSignInClient mGoogleSignInClient;
-    int RC_SIGN_IN = 20;
+    int RC_SIGN_IN = 9000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +119,7 @@ public class SignIn extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SignIn.this, SignUp.class);
                 startActivity(intent);
+                finish();
             }
         });
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -164,8 +166,17 @@ public class SignIn extends AppCompatActivity {
 
 //  Login database with google
     private void googleSignIn() {
-        Intent intent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(intent, RC_SIGN_IN);
+        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Intent intent = mGoogleSignInClient.getSignInIntent();
+                    startActivityForResult(intent, RC_SIGN_IN);
+                } else{
+                    Log.d("Google", "Error sign in");
+                }
+            }
+        });
     }
 
     @Override

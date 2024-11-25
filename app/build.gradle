@@ -51,6 +51,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.1'
     implementation platform('com.google.firebase:firebase-bom:33.5.1')
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth:21.0.3'
     // Cloudinary
     implementation 'com.cloudinary:cloudinary-android:3.0.2'
 
