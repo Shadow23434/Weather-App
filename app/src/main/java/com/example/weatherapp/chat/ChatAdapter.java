@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.hourly.Hourly;
+import com.nitish.typewriterview.TypeWriterView;
 
 import java.util.ArrayList;
 

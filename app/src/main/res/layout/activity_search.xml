@@ -53,7 +53,6 @@
                 android:background="@drawable/edittext_bg"
                 android:drawableStart="@drawable/search"
                 android:drawablePadding="@dimen/_16sdp"
-                android:textColor="@color/black"
                 android:ems="10"
                 android:focusableInTouchMode="true"
                 android:hint="Search..."
@@ -61,6 +60,7 @@
                 android:maxLines="1"
                 android:padding="@dimen/_10sdp"
                 android:scrollHorizontally="true"
+                android:textColor="@color/black"
                 android:textColorHint="@color/grey" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
