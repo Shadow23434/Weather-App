@@ -63,14 +63,14 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
     private final String ASSISTANT = "assistant";
     private final String USER = "user";
     private RecyclerView rvChatSection;
-    TextToSpeech textToSpeech;
-    SpeechRecognizer speechRecognizer;
+    private TextToSpeech textToSpeech;
+    private SpeechRecognizer speechRecognizer;
     private Intent speechIntent;
     public static final Integer RECORD_AUDIO_REQUEST_CODE = 1;
-    AppCompatImageView mic_btn;
-    TextView textget;
-    EditText editText;
-    LottieAnimationView mic_animation;
+    private AppCompatImageView mic_btn;
+    private TextView textget;
+    private EditText editText;
+    private LottieAnimationView mic_animation;
     private int count = 0;
 
     @Override
