@@ -41,9 +41,9 @@ public class UploadProfile extends AppCompatActivity {
     private ImageView imageUser;
     private static boolean isMediaManagerInitialized = false;
     private String linkPic;
-    FirebaseAuth fAuth;
-    FirebaseUser user;
-    DatabaseReference database;
+    private FirebaseAuth fAuth;
+    private FirebaseUser user;
+    private DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

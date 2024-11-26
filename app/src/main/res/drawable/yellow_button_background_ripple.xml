@@ -6,5 +6,5 @@
             <corners android:radius="@dimen/_35sdp" />
         </shape>
     </item>
-    <item android:drawable="@drawable/yellow_button_bg"
+    <item android:drawable="@drawable/yellow_button_bg" />
 </ripple>

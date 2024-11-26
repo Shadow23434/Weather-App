@@ -69,12 +69,13 @@
                 android:textSize="15sp" />
 
             <LinearLayout
+                android:id="@+id/settingLinearLayout1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/rounded_white"
+                android:background="@drawable/rounded_purple"
                 android:orientation="vertical"
                 android:padding="15dp">
 
@@ -96,12 +97,12 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="20dp"
                         android:layout_toEndOf="@+id/nightmode"
-                        android:text="Night Mode"
+                        android:text="Light Mode"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchNightMode"
+                        android:id="@+id/switchLightMode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -178,12 +179,13 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/settingLinearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/rounded_white"
+                android:background="@drawable/rounded_purple"
                 android:orientation="vertical"
                 android:padding="15sp">
 
@@ -285,16 +287,18 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/settingLinearLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/rounded_white"
+                android:background="@drawable/rounded_purple"
                 android:orientation="vertical"
                 android:padding="15sp">
 
                 <RelativeLayout
+                    android:id="@+id/btnSendUs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp">
@@ -327,6 +331,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/btnAboutUs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp">

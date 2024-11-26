@@ -1,4 +1,4 @@
-package com.example.weatherapp.profile;
+package com.example.weatherapp.settings;
 
 public class BackgroundManager {
     private static BackgroundManager instance;

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/signInBackground"
     android:background="@drawable/purple_background">
 
     <ImageView
@@ -31,12 +32,12 @@
         tools:ignore="MissingConstraints" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/signInLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/linear_background"
+        android:background="@drawable/linear_background_purple"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -106,6 +107,7 @@
             android:textColor="#FBFBFB"
             android:textSize="20sp"
             android:textStyle="bold" />
+
         <Button
             android:id="@+id/btnSignUp"
             android:layout_width="wrap_content"
@@ -114,7 +116,7 @@
             android:layout_marginTop="2dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="8dp"
-            android:backgroundTint="#8C58C8"
+            android:backgroundTint="#7F41A4"
             android:fontFamily="sans-serif-black"
             android:text="Sign Up"
             android:textColor="#FDFCFC"
@@ -138,14 +140,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/signInLinearLayout"
         app:layout_constraintVertical_bias="0.309" />
 
     <ImageButton
         android:id="@+id/btnGoogle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#8044A5"
+        android:backgroundTint="#8542A6"
         android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
