@@ -1,56 +1,134 @@
 package com.example.weatherapp.activities;
 
+import static java.lang.Math.round;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
+import com.example.weatherapp.hourly.Hourly;
+import com.example.weatherapp.locationSuggestion.Suggestion;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Locale;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class SearchActivity extends AppCompatActivity {
+    private String latitude;
+    private String longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        onEnterEditSearch();
+        latitude = getIntent().getStringExtra("latitude");
+        longitude = getIntent().getStringExtra("longitude");
 
-        disableFocusEditText();
+        if (latitude != null && !latitude.isEmpty() &&
+                longitude != null && !longitude.isEmpty()) {
+            Log.e("Suggestion Intent: ", "Latitude = " + latitude + ", " + "Longitude = " + longitude);
+            fetchHourlyWeatherData();
+        } else Log.e("Suggestion Intent: ", "latitude is null");
+
+        onClickCurrentLocationLayout();
+        onSearch();
         onClickBottomAppBar();
         onClickFloatingButton();
     }
 
-    private void onEnterEditSearch() {
-        EditText editText = (EditText) findViewById(R.id.edit_txt_search);
-        if (editText.getText() != null) {
-            editText.setOnKeyListener(new View.OnKeyListener() {
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                        // Perform action on key press
-                        Log.e("Search: ", "Search for " + String.valueOf(editText.getText()));
-                        Intent intent = new Intent(SearchActivity.this, MainActivity.class);
-                        intent.putExtra("editTextSearch", editText.getText().toString());
-                        startActivity(intent);
-                        return true;
-                    }
-                    return false;
-                }
-            });
-        } else {
-            Log.e("Search: ", "EditText is null");
-        }
+    private void onClickCurrentLocationLayout() {
+        LinearLayout currentLocationLayout = findViewById(R.id.current_location_layout);
+        currentLocationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SearchActivity.this, MainActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
+            }
+        });
     }
 
-    private void disableFocusEditText() {
-        EditText editText = findViewById(R.id.edit_txt_search);
-        editText.clearFocus();
+    private void fetchHourlyWeatherData() {
+        // Hourly weather data
+        String url = String.format("https://api.weatherbit.io/v2.0/forecast/hourly?&lat=%s&lon=%s&key=%s&hours=12", latitude, longitude, BuildConfig.weather_api);
+        Log.e("Fetching hourly API: ", url);
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+
+        new Thread(() -> {
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    JSONObject data = jsonObject.getJSONArray("data").getJSONObject(0);
+
+                    String city = jsonObject.getString("city_name");
+                    String country = getCountryName(jsonObject.getString("country_code"));
+                    String description = data.getJSONObject("weather").getString("description");
+                    int temperature = (int) Math.round(data.getDouble("temp"));
+                    String icon = data.getJSONObject("weather").getString("icon");
+
+
+                    TextView cityName = (TextView) findViewById(R.id.city_name);
+                    TextView countryName = (TextView) findViewById(R.id.country_name);
+                    TextView weatherDescription = (TextView) findViewById(R.id.weather_description);
+                    TextView temp = (TextView) findViewById(R.id.temp);
+                    ImageView weatherIcon = (ImageView) findViewById(R.id.weather_icon);
+                    int resId = getResources().getIdentifier(icon, "drawable", getPackageName());
+
+                    runOnUiThread( () -> {
+                        cityName.setText(city);
+                        countryName.setText(country);
+                        weatherDescription.setText(description);
+                        temp.setText(temperature + "℃");
+                        Glide.with(this).load(resId).into(weatherIcon);
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Fetching hourly API: ", e.getMessage());
+                runOnUiThread(() -> Toast.makeText(SearchActivity.this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show());
+            }
+        }).start();
+    }
+
+    private void onSearch() {
+        EditText editText = (EditText) findViewById(R.id.edit_txt_search);
+        editText.setFocusable(false);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SearchActivity.this, SuggestionActivity.class));
+            }
+        });
     }
 
     private void onClickBottomAppBar() {
@@ -89,5 +167,11 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(new Intent(SearchActivity.this, AssistantActivity.class));
             }
         });
+    }
+
+    @NonNull
+    private String getCountryName(String countryCode) {
+        Locale locale = new Locale("", countryCode);
+        return locale.getDisplayCountry();
     }
 }

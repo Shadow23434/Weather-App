@@ -51,7 +51,6 @@ public class SignUp extends AppCompatActivity {
 //            startActivity(intent);
 //            finish();
 //        }
-
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,7 +89,7 @@ public class SignUp extends AppCompatActivity {
                                                 HashMap<String, String> map = new HashMap<>();
                                                 map.put("id", user.getUid());
                                                 map.put("name", strFullName);
-                                                map.put("profile", user.getPhotoUrl().toString());
+                                                map.put("profile", null);
                                                 map.put("email", strEmail);
                                                 map.put("password", strPassword);
                                                 database.getReference().child("user").child(user.getUid()).setValue(map);

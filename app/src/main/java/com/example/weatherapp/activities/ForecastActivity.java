@@ -39,7 +39,8 @@ import okhttp3.Response;
 public class ForecastActivity extends AppCompatActivity {
     private RecyclerView.Adapter dailyAdapter;
     private RecyclerView rvDaily;
-    private String city;
+    private String latitude;
+    private String longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +53,11 @@ public class ForecastActivity extends AppCompatActivity {
 
     private void initRvDaily() {
        ArrayList<Daily> dailyArrayList = new ArrayList<>();
-       city = getIntent().getStringExtra("city");
+        latitude = getIntent().getStringExtra("latitude");
+        longitude = getIntent().getStringExtra("longitude");
 
-       if (city != null) {
-           Log.e("Main Intent: ", "city = " + city);
-           // Fetching API
+       if (latitude != null && longitude != null) {
+           Log.e("Main Intent: ", "latitude = " + latitude);
             fetchWeatherData(dailyArrayList);
        } else {
            Log.e("Main Intent: ", "city is null");
@@ -70,7 +71,7 @@ public class ForecastActivity extends AppCompatActivity {
     }
 
     private void fetchWeatherData(ArrayList<Daily> dailyArrayList) {
-        String url = String.format("https://api.weatherbit.io/v2.0/forecast/daily?city=%s&key=%s", city, BuildConfig.weather_api);
+        String url = String.format("https://api.weatherbit.io/v2.0/forecast/daily?&lat=%s&lon=%s&key=%s", latitude, longitude, BuildConfig.weather_api);
         Log.e("Fetching API: ", url);
 
         OkHttpClient client = new OkHttpClient();
@@ -143,7 +144,8 @@ public class ForecastActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ForecastActivity.this, MainActivity.class);
-                intent.putExtra("city", city);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
                 startActivity(intent);
             }
         });

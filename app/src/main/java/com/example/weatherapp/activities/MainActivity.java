@@ -54,10 +54,6 @@ import com.nitish.typewriterview.TypeWriterView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-<<<<<<< HEAD
-=======
-import org.w3c.dom.Text;
->>>>>>> cebf38352e86bea8f75435cdc5a51ce844dc777d
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -77,18 +73,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private RecyclerView rvHourly;
     private LocationManager locationManager; // request location
     private AlertDialog enableGPSDialog; // prompt user to enable GPS service
-    private AlertDialog openSettingDialog; // prompt user to open Setting for location service
     private int retryCount = 0;
     private static final int MAX_RETRY_ATTEMPTS = 3;
     private String city; // a string has no space
+    private String latitude;
+    private String longitude;
     private WeatherData weatherData;
     private String currentLocation;
     private String currentTemperature;
     private String weatherCondition;
     private boolean isNight;
     private TypeWriterView shortWeatherDescription;
-    ImageView dropDownIcon;
-    ImageView dropUpIcon;
+    private ImageView dropDownIcon;
+    private ImageView dropUpIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,22 +98,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         weatherData = new WeatherData();
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
 
-        // Go back from forecast
-        String cityForecast = getIntent().getStringExtra("city");
-        // Enter editText
-        String citySearch = formatCityName(getIntent().getStringExtra("editTextSearch"));
+        String intentLatitude = getIntent().getStringExtra("latitude");
+        String intentLongitude = getIntent().getStringExtra("longitude");
 
-        if (cityForecast != null) {
-            city = cityForecast;
-            initRvHourly();
-        }
-        else if (citySearch != null) {
-            Log.e("Forecast Intent: ", "City is null");
-            city = citySearch;
+        if (intentLatitude != null && intentLongitude != null) {
+            latitude = intentLatitude;
+            longitude = intentLongitude;
             initRvHourly();
         }
         else {
-            Log.e("Search Intent: ", "City is null");
+            Log.e("Intent: ", "Latitude and Longitude is null");
             getCurrentLocation();
         }
 
@@ -207,13 +198,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     private void initRvHourly() {
         ArrayList<Hourly> items = new ArrayList<>();
-
         rvHourly = findViewById(R.id.rv_hourly);
         rvHourly.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         adapterHourly = new HourlyAdapter(items);
         rvHourly.setAdapter(adapterHourly);
 
-        if (!city.isEmpty() && city != null) {
+        if (latitude != null && longitude != null) {
             fetchDailyWeatherData();
             fetchHourlyWeatherData(items, () -> {
                     Log.e("Current Location = ", currentLocation);
@@ -232,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     private void fetchHourlyWeatherData(ArrayList<Hourly> items, Runnable onComplete) {
         // Hourly weather data
-        String url = String.format("https://api.weatherbit.io/v2.0/forecast/hourly?city=%s&key=%s&hours=12", city, BuildConfig.weather_api);
+        String url = String.format("https://api.weatherbit.io/v2.0/forecast/hourly?&lat=%s&lon=%s&key=%s&hours=12", latitude, longitude, BuildConfig.weather_api);
         Log.e("Fetching hourly API: ", url);
 
         OkHttpClient client = new OkHttpClient();
@@ -291,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
 
     private void fetchDailyWeatherData() {
-        String url = String.format("https://api.weatherbit.io/v2.0/forecast/daily?city=%s&key=%s", city, BuildConfig.weather_api);
+        String url = String.format("https://api.weatherbit.io/v2.0/forecast/daily?&lat=%s&lon=%s&key=%s", latitude, longitude, BuildConfig.weather_api);
         Log.e("Fetching daily API: ", url);
 
         OkHttpClient client = new OkHttpClient();
@@ -496,7 +486,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ForecastActivity.class);
-                intent.putExtra("city", city);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
                 startActivity(intent);
             }
         });
@@ -522,7 +513,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         return null;
     }
 
-    public void getCurrentLocation() {
+    private void getCurrentLocation() {
         try {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -556,13 +547,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         try {
             // Get cityName from the latitude and longitude
             Log.e("Location: ", "Location received: " + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-            Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            String address = addresses.get(0).getAdminArea();
-            Log.e("address: ", "address = " + address);
-            city = formatCityName(address);
+            latitude = String.valueOf(location.getLatitude());
+            longitude = String.valueOf(location.getLongitude());
 
-//            fetchDailyWeatherData();
             initRvHourly();
         } catch (Exception e) {
             e.printStackTrace();
@@ -583,7 +570,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public void onProviderEnabled(@NonNull String provider) {
         Log.e("Location: ", "Provider enabled: " + provider);
         if (enableGPSDialog != null) enableGPSDialog.dismiss();
-//        if (openSettingDialog != null) openSettingDialog.dismiss();
     }
 
     @Override
