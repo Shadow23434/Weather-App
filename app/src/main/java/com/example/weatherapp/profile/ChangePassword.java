@@ -26,7 +26,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class ChangePassword extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseUser user;
-    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -42,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
         });
         ImageView gif = findViewById(R.id.fallingStars);
         Glide.with(this)
-                .load(R.drawable.falling_stars)
+                .load(R.drawable.snow_shower)
                 .into(gif);
 
     }
