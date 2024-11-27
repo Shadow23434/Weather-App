@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/splashBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/purple_background"
@@ -67,23 +67,36 @@
         app:layout_constraintVertical_bias="0.042" />
 
 
-   <Button
-        android:id="@+id/btngetstart"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_margin="30dp"
-        android:backgroundTint="#DDB130"
-        android:text="Get Start"
-        android:textColor="#362A84"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        app:cornerRadius="32dp"
+    <RelativeLayout
+        android:id="@+id/btnGetstart"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:background="@drawable/yellow_button_background_ripple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.189"
-        app:rippleColor="#362A84" />
+        app:layout_constraintVertical_bias="0.115"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/getStartText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Get Start"
+            android:textColor="#362A84"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/getStartAnimation"
+            app:lottie_autoPlay="false"
+            app:lottie_rawRes="@raw/loading"
+            app:lottie_loop="true"
+            android:layout_width="@dimen/_300sdp"
+            android:layout_height="@dimen/_300sdp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

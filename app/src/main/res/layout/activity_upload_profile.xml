@@ -26,7 +26,7 @@
         android:id="@+id/linearLayout2"
         android:layout_width="@dimen/_300sdp"
         android:layout_height="@dimen/_300sdp"
-        android:background="@drawable/linear_background"
+        android:background="@drawable/linear_background_purple"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

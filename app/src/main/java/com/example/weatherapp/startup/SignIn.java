@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,11 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.R;
 import com.example.weatherapp.activities.MainActivity;
 //import com.example.weatherapp.database.CreateDatabase;
+import com.example.weatherapp.settings.BackgroundManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -42,11 +46,11 @@ import java.util.HashMap;
 
 public class SignIn extends AppCompatActivity {
 
-    ImageButton btnGoogle;
-    FirebaseAuth fAuth;
-    FirebaseDatabase database;
-    GoogleSignInClient mGoogleSignInClient;
-    int RC_SIGN_IN = 9000;
+    private ImageButton btnGoogle;
+    private FirebaseAuth fAuth;
+    private FirebaseDatabase database;
+    private GoogleSignInClient mGoogleSignInClient;
+    private static int RC_SIGN_IN = 9000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,7 +168,7 @@ public class SignIn extends AppCompatActivity {
                 .into(gif);
     }
 
-//  Login database with google
+    //  Login database with google
     private void googleSignIn() {
         mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override

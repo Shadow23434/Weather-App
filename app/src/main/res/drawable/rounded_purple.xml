@@ -2,7 +2,7 @@
     android:shape="rectangle">
 
     <!-- Solid background color -->
-    <solid android:color="#AAAAAA"/> <!-- Ganti dengan warna yang diinginkan -->
+    <solid android:color="#6A3C72"/> <!-- Ganti dengan warna yang diinginkan -->
 
     <!-- Rounded corners -->
     <corners android:radius="20dp"/> <!-- Ubah ukuran radius sesuai keinginan -->
