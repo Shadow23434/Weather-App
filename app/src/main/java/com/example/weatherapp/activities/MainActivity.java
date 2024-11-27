@@ -5,6 +5,7 @@ import static java.lang.Math.round;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,7 +15,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -402,21 +406,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 checkGPSEnabledAndProceed();
             } else {
                 Log.e("Location", "Location permission denied");
-                // User selected "Denined"
-                // App don't run here
+                // User selected "Deny"
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                    new AlertDialog.Builder(this)
-                            .setMessage("This app needs location access to function properly. Please grant the permission.")
-                            .setPositiveButton("Grant Permission", (dialog, which) -> requestLocationPermission())
-                            .setNegativeButton("Cancel", (dialog, which) -> {
-                                Toast.makeText(this, "Permission is necessary for the app to work", Toast.LENGTH_SHORT).show();
-                            })
-                            .create()
-                            .show();
+                    showLocationPermissionDialog();
                 } else {
-                    // User selected "Don't ask again"
-                    // App run here
+                    // User selected "Don't ask again" or close app
+                    // App don't run here
                     new AlertDialog.Builder(this)
                             .setMessage("Location permission is permanently denied. Please go to app settings to enable it.")
                             .setPositiveButton("Open Settings", (dialog, which) -> {
@@ -435,6 +430,40 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
     }
 
+    private void showLocationPermissionDialog() {
+        ConstraintLayout locationPermissionLayout = findViewById(R.id.location_permission_layout);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.location_permission_dialog, locationPermissionLayout);
+        Button grantPermissionBtn = view.findViewById(R.id.grant_permission_btn);
+        Button cancelBtn = view.findViewById(R.id.cancel_btn);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+
+        grantPermissionBtn.findViewById(R.id.grant_permission_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                requestLocationPermission();
+            }
+        });
+
+        cancelBtn.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                Toast.makeText(MainActivity.this, "Permission is necessary for the app to work", Toast.LENGTH_SHORT).show();
+                finishAffinity(); // Closes all activities and exits the app
+                System.exit(0);
+            }
+        });
+
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+    }
+
     private void checkGPSEnabledAndProceed() {
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -443,18 +472,37 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             proceedWithLocationEnabled();
         }
     }
-
     private void promptEnableGPS() {
-        enableGPSDialog = new AlertDialog.Builder(this)
-                .setMessage("GPS services are disabled. Please enable them for the app to function correctly.")
-                .setPositiveButton("Enable", (dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivityForResult(intent, 101);
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    Toast.makeText(this, "GPS service not enabled", Toast.LENGTH_SHORT).show();
-                })
-                .create();
+        ConstraintLayout gpsServiceLayout = findViewById(R.id.gps_service_layout);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.gps_service_dialog, gpsServiceLayout);
+        Button openSettingsBtn = view.findViewById(R.id.open_settings_btn);
+        Button cancelBtn = view.findViewById(R.id.cancel_btn);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setView(view);
+        enableGPSDialog = builder.create();
+
+        openSettingsBtn.findViewById(R.id.open_settings_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(intent, 101);
+            }
+        });
+
+        cancelBtn.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enableGPSDialog.dismiss();
+                Toast.makeText(MainActivity.this, "GPS service not enabled", Toast.LENGTH_SHORT).show();
+                finishAffinity(); // Closes all activities and exits the app
+                System.exit(0);
+            }
+        });
+
+        if (enableGPSDialog.getWindow() != null) {
+            enableGPSDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
         enableGPSDialog.show();
     }
 
@@ -561,18 +609,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         String withoutDiacritics = normalized.replaceAll("\\p{M}", "");
         // Replace special Vietnamese letters
         return withoutDiacritics.replace("Đ", "D").replace("đ", "d");
-    }
-
-    private String formatCityName(String address) {
-        if (address != null) {
-            address = removeDiacritics(address);
-            String[] arrayCity = address.trim().split("\\s");
-            String cityName = "";
-            for (String word : arrayCity) cityName += word;
-            Log.e("Current city: ", cityName);
-            return cityName;
-        }
-        return null;
     }
 
     private void getCurrentLocation() {
