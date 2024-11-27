@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,8 +60,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             getCurrentLocation();
         }
 
+        goAQI();
         onClickDropUpIcon();
         onClickDropDownIcon();
         onClickLocationIcon();
@@ -116,11 +120,23 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         goNext7Day();
     }
 
+    private void goAQI() {
+        LinearLayout aqiLayout = findViewById(R.id.aqi_layout);
+        aqiLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AQIActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
+            }
+        });
+    }
+
     private void onClickDropDownIcon() {
         dropDownIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("onClickDropDownIcon: ", "OK");
                 shortWeatherDescription.setVisibility(View.VISIBLE);
                 dropDownIcon.setVisibility(View.INVISIBLE);
                 dropUpIcon.setVisibility(View.VISIBLE);
@@ -132,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         dropUpIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("onClickDropUpIcon: ", "OK");
                 shortWeatherDescription.setVisibility(View.GONE);
                 dropUpIcon.setVisibility(View.INVISIBLE);
                 dropDownIcon.setVisibility(View.VISIBLE);
@@ -203,8 +218,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (latitude != null && longitude != null) {
             fetchDailyWeatherData();
             fetchHourlyWeatherData(items, () -> {
-                    Log.e("Current Location = ", currentLocation);
-                    Log.e("Current Temperature = ", currentTemperature);
                     if (currentLocation != null &&  currentTemperature!= null && weatherCondition != null) {
                         generateShortWeatherDescription();
                     }
@@ -299,16 +312,49 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     int max_temp = (int) round(d_max_temp);
                     int min_temp = (int) round(d_min_temp);
 
+                    Double d_precipitation = currentDayData.getDouble("precip");
+                    int precipitation = (int) Math.round(d_precipitation);
+                    String humidity = currentDayData.getString("rh");
+                    Double wind_spd_ms = currentDayData.getDouble("wind_spd");
+                    Double wind_spd_kmh = round(wind_spd_ms * 3.6) / 100.0;
+                    String windSpeed = wind_spd_kmh.toString();
+
+                    Double d_visibility = currentDayData.getDouble("vis");
+                    int visibility = (int) Math.round(d_visibility);
+                    String pressure = currentDayData.getString("pres");
+                    Long l_sunset = currentDayData.getLong("sunset_ts");
+                    Long l_sunrise = currentDayData.getLong("sunrise_ts");
+                    String sunset = convertTimestamp(l_sunset);
+                    String sunrise = convertTimestamp(l_sunrise);
+
                     TextView tvCity = (TextView) findViewById(R.id.city);
                     TextView tvCountry = (TextView) findViewById(R.id.country);
                     TextView maxTemp = (TextView) findViewById(R.id.max_temp);
                     TextView minTemp = (TextView) findViewById(R.id.min_temp);
+
+                    TextView tvPrecipitation = findViewById(R.id.precipitation);
+                    TextView tvHumidity = findViewById(R.id.humidity);
+                    TextView tvWindSpeed = findViewById(R.id.wind_speed);
+
+                    TextView tvVisibility = findViewById(R.id.visibility);
+                    TextView tvPressure = findViewById(R.id.pressure);
+                    TextView tvSunset = findViewById(R.id.sunset);
+                    TextView tvSunrise = findViewById(R.id.sunrise);
 
                     runOnUiThread(() -> {
                         tvCity.setText(cityName + ", ");
                         tvCountry.setText(countryName);
                         maxTemp.setText(max_temp + "°/");
                         minTemp.setText(min_temp + "°");
+
+                        tvPrecipitation.setText(precipitation + "%");
+                        tvHumidity.setText(humidity + "%");
+                        tvWindSpeed.setText(windSpeed + " Km");
+
+                        tvVisibility.setText(visibility + " Km");
+                        tvPressure.setText(pressure + " Mb");
+                        tvSunset.setText(sunset);
+                        tvSunrise.setText(sunrise);
                     });
                 }
             } catch (Exception e) {
@@ -439,6 +485,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         return locale.getDisplayCountry();
     }
 
+    @NonNull
+    private String convertTimestamp(long time) {
+            // Convert to milliseconds
+            Date date = new Date(time * 1000);
+
+            // 12-hour clock with AM/PM
+            SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+
+            String formattedTime = formatter.format(date);
+            return formattedTime;
+    }
+
+
     private void onClickBottomAppBar() {
         ImageView search_appBar_icon = findViewById(R.id.search_appBar_icon);
         ImageView favor_appBar_icon = findViewById(R.id.favor_appBar_icon);
@@ -447,7 +506,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         search_appBar_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SearchActivity.class));
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
             }
         });
 

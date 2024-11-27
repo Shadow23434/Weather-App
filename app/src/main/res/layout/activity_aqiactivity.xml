@@ -5,6 +5,314 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.AQIActivity">
+    tools:context=".activities.AQIActivity"
+    android:background="@drawable/purple_background">
+
+    <ImageView
+        android:id="@+id/back_btn"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:padding="@dimen/_5sdp"
+        android:src="@drawable/left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/current_location_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/back_btn"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ha Noi, "
+            android:textAlignment="textEnd"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18ssp" />
+
+        <TextView
+            android:id="@+id/country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Viet Nam"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18ssp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/aqi_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Air Quality"
+        android:textSize="@dimen/_20ssp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintTop_toBottomOf="@id/current_location_layout"
+        app:layout_constraintStart_toStartOf="@id/back_btn"/>
+
+    <LinearLayout
+        android:id="@+id/index_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/aqi_header"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/aqi_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50"
+            android:textSize="@dimen/_70ssp"
+            android:textColor="@color/good" />
+
+        <TextView
+            android:id="@+id/aqi_condition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Good"
+            android:textSize="@dimen/_18ssp"
+            android:textColor="@color/good"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/summary_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:padding="@dimen/_8sdp"
+        android:background="@drawable/banner_bg"
+        app:layout_constraintTop_toBottomOf="@id/index_layout"
+        app:layout_constraintStart_toStartOf="@id/back_btn">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ai_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:text="Summary"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16ssp"
+                android:textStyle="bold"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+
+                <ImageView
+                    android:id="@+id/ic_drop_up"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:background="@drawable/ic_arrow_drop_up" />
+
+
+                <ImageView
+                    android:id="@+id/ic_drop_down"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:background="@drawable/ic_arrow_drop_down"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <com.nitish.typewriterview.TypeWriterView
+            android:id="@+id/aqi_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:text=""
+            android:textSize="@dimen/_14ssp"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/summary_layout"
+        app:layout_constraintStart_toStartOf="@id/back_btn">
+
+        <LinearLayout
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:orientation="vertical"
+            android:padding="@dimen/_8sdp"
+            android:gravity="center"
+            android:background="@drawable/linearlayout_banner_bg">
+
+            <TextView
+                android:id="@+id/pm25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100.0"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PM2.5"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:orientation="vertical"
+            android:padding="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:gravity="center"
+            android:background="@drawable/linearlayout_banner_bg">
+
+            <TextView
+                android:id="@+id/pm10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100.0"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PM10"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:orientation="vertical"
+            android:padding="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:gravity="center"
+            android:background="@drawable/linearlayout_banner_bg">
+
+            <TextView
+                android:id="@+id/so2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100.0"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SO₂"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/layout_1"
+        app:layout_constraintStart_toStartOf="@id/back_btn">
+
+        <LinearLayout
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:orientation="vertical"
+            android:padding="@dimen/_8sdp"
+            android:gravity="center"
+            android:background="@drawable/linearlayout_banner_bg">
+
+            <TextView
+                android:id="@+id/no2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100.0"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NO₂"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:orientation="vertical"
+            android:padding="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:gravity="center"
+            android:background="@drawable/linearlayout_banner_bg">
+
+            <TextView
+                android:id="@+id/o3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100.0"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="O₃"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:orientation="vertical"
+            android:padding="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:gravity="center"
+            android:background="@drawable/linearlayout_banner_bg">
+
+            <TextView
+                android:id="@+id/co"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100.0"
+                android:textSize="@dimen/_14ssp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CO"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

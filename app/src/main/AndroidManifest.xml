@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherApp"
         tools:targetApi="34">
-
+        <activity
+            android:name=".activities.AQIActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.SuggestionActivity"
             android:exported="false" />
