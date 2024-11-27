@@ -1,35 +1,26 @@
 package com.example.weatherapp.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.locationSuggestion.RvLocationSuggestionInterface;
-import com.example.weatherapp.locationSuggestion.Suggestion;
-import com.example.weatherapp.locationSuggestion.SuggestionAdapter;
+import com.example.weatherapp.domains.RvLocationSuggestionInterface;
+import com.example.weatherapp.domains.models.Suggestion;
+import com.example.weatherapp.adapters.SuggestionAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;

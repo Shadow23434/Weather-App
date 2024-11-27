@@ -1,4 +1,4 @@
-package com.example.weatherapp.hourly;
+package com.example.weatherapp.domains.models;
 
 public class Hourly {
     private String hour;

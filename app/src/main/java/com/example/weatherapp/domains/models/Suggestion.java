@@ -1,4 +1,4 @@
-package com.example.weatherapp.locationSuggestion;
+package com.example.weatherapp.domains.models;
 
 public class Suggestion {
     private String cityName;

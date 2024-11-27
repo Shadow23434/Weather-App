@@ -1,4 +1,4 @@
-package com.example.weatherapp.daily;
+package com.example.weatherapp.domains.models;
 
 public class Daily {
     private String day;

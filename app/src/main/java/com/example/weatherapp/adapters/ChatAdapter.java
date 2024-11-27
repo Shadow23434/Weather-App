@@ -1,4 +1,4 @@
-package com.example.weatherapp.chat;
+package com.example.weatherapp.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,8 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.hourly.Hourly;
-import com.nitish.typewriterview.TypeWriterView;
+import com.example.weatherapp.domains.models.ChatModel;
 
 import java.util.ArrayList;
 

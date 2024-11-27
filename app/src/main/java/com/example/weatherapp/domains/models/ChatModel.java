@@ -1,4 +1,4 @@
-package com.example.weatherapp.chat;
+package com.example.weatherapp.domains.models;
 
 public class ChatModel {
     private String message;

@@ -1,4 +1,4 @@
-package com.example.weatherapp.daily;
+package com.example.weatherapp.domains;
 
 
 public class WeatherData {

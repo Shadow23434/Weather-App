@@ -5,8 +5,6 @@ import static java.lang.Math.round;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -33,10 +31,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
-import com.example.weatherapp.daily.WeatherData;
-import com.example.weatherapp.daily.WeatherDataCallback;
-import com.example.weatherapp.hourly.HourlyAdapter;
-import com.example.weatherapp.hourly.Hourly;
+import com.example.weatherapp.domains.WeatherData;
+import com.example.weatherapp.domains.WeatherDataCallback;
+import com.example.weatherapp.adapters.HourlyAdapter;
+import com.example.weatherapp.domains.models.Hourly;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
 import com.google.ai.client.generativeai.type.BlockThreshold;
@@ -62,7 +60,6 @@ import okhttp3.Response;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -75,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private AlertDialog enableGPSDialog; // prompt user to enable GPS service
     private int retryCount = 0;
     private static final int MAX_RETRY_ATTEMPTS = 3;
-    private String city; // a string has no space
     private String latitude;
     private String longitude;
     private WeatherData weatherData;
@@ -403,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     private void promptEnableGPS() {
         enableGPSDialog = new AlertDialog.Builder(this)
-                .setMessage("Location services are disabled. Please enable them for the app to function correctly.")
+                .setMessage("GPS services are disabled. Please enable them for the app to function correctly.")
                 .setPositiveButton("Enable", (dialog, which) -> {
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivityForResult(intent, 101);
@@ -475,7 +471,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, AssistantActivity.class));
+                Intent intent = new Intent(MainActivity.this, AssistantActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
             }
         });
     }

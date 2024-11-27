@@ -30,9 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
-import com.example.weatherapp.chat.ChatAdapter;
-import com.example.weatherapp.chat.ChatModel;
-import com.google.ai.client.generativeai.Chat;
+import com.example.weatherapp.adapters.ChatAdapter;
+import com.example.weatherapp.domains.models.ChatModel;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
 import com.google.ai.client.generativeai.type.BlockThreshold;
@@ -46,16 +45,15 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class AssistantActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
     private ArrayList<ChatModel> chatModelArrayList;
@@ -72,11 +70,27 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
     private EditText editText;
     private LottieAnimationView mic_animation;
     private int count = 0;
+    private GenerativeModelFutures AIModel;
+    private String dailyData;
+    private String hourlyData;
+    private String latitude;
+    private String longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assistant);
+
+        latitude = getIntent().getStringExtra("latitude");
+        longitude = getIntent().getStringExtra("longitude");
+
+        if (latitude != null && !latitude.isEmpty()
+            && longitude != null && !longitude.isEmpty()) {
+            initModel();
+        }
+        else {
+            Log.e("Main Intent: ", "Latitude is null");
+        }
 
         textToSpeech = new TextToSpeech(this, this);
         textget = findViewById(R.id.textget);
@@ -86,12 +100,126 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
 
         initRvChatSection();
         checkPermission();
-        onSpeechRecognization();
+        onSpeechRecognization(); // check here
         onEnterEditText();
         onClickSendMessage();
         onClickMicButton();
         animationMicButton();
         goHome();
+    }
+
+    private void initModel() {
+        fetchWeatherData(() -> {
+            getModel();
+        });
+    }
+
+    private void getModel() {
+        SafetySetting safetySetting = new SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH);
+        GenerationConfig.Builder builder = new GenerationConfig.Builder();
+        builder.temperature = 0.9f;
+        builder.topK = 16;
+        builder.topP = 0.1f;
+        GenerationConfig generationConfig = builder.build();
+        RequestOptions requestOptions = new RequestOptions();
+        Content content = new Content.Builder()
+                .addText("You are a friendly and knowledgeable weather assistant. You provide a very short answer, but accurate and concise weather forecasts based on user queries, using data for current and future conditions. Be specific, include temperature ranges, precipitation chances, wind speeds, and any weather alerts if applicable. Tailor your responses to the user's location and requested time period. Make your tone clear, helpful, and approachable. If users ask for advice, offer practical tips based on the weather conditions, such as clothing suggestions, travel precautions, or outdoor activity recommendations.\n" +
+                        String.format("Hourly weather data: %s.", hourlyData) +
+                        String.format("Daily weather data: %s.", dailyData)
+                )
+                .build();
+
+        GenerativeModel gm = new GenerativeModel(
+                "gemini-1.5-flash",
+                BuildConfig.gemini_api,
+                generationConfig,
+                Collections.singletonList(safetySetting),
+                requestOptions,
+                null,
+                null,
+                content
+        );
+        AIModel = GenerativeModelFutures.from(gm);
+    }
+
+    private void getResponse(String message) {
+        Log.e("GEMINI: ", "Connected!!!");
+        Log.e("GEMINI: ", "User:" + message);
+
+//        GenerativeModelFutures model = getModel();
+        Content content = new Content.Builder().addText(message).build();
+        Executor executor = Executors.newSingleThreadExecutor();
+
+        ListenableFuture<GenerateContentResponse> response = AIModel.generateContent(content);
+        Futures.addCallback(
+                response,
+                new FutureCallback<GenerateContentResponse>() {
+                    @Override
+                    public void onSuccess(GenerateContentResponse result) {
+                        Log.e("GEMINI:  ", "Fetching successful");
+                        chatModelArrayList.add(new ChatModel(result.getText().toString(), ASSISTANT));
+                        Log.e("onSuccess: ", result.getText().toString());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                chatAdapter.notifyDataSetChanged();
+                            }
+                        });
+                        speak(result.getText().toString());
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.e("GEMINI: ", "Fetching Fail!!!");
+                        Log.e("Gemini: ", t.toString());
+                        chatModelArrayList.add(new ChatModel("Something went wrong, please try again!", ASSISTANT));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                chatAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                },
+                executor);
+    }
+
+    private void fetchWeatherData(Runnable onComplete) {
+        String hourlyUrl = String.format("https://api.weatherbit.io/v2.0/forecast/hourly?&lat=%s&lon=%s&key=%s&hours=12", latitude, longitude, BuildConfig.weather_api);
+        Log.e("Fetch weather data: ", hourlyUrl);
+        String dailyUrl = String.format("https://api.weatherbit.io/v2.0/forecast/daily?&lat=%s&lon=%s&key=%s", latitude, longitude, BuildConfig.weather_api);
+        Log.e("Fetch weather data: ", dailyUrl);
+
+        OkHttpClient client = new OkHttpClient();
+        Request hourlyRequest = new Request.Builder().url(hourlyUrl).build();
+        Request dailyRequest = new Request.Builder().url(dailyUrl).build();
+
+        new Thread(() -> {
+            // hourly
+            try {
+                Response hourlyResponse = client.newCall(hourlyRequest).execute();
+                if (hourlyResponse.isSuccessful() && hourlyResponse.body() != null) {
+                    hourlyData = hourlyResponse.body().string();
+                    Log.e("Hourly data: ", hourlyData);
+                }
+            } catch (Exception e) {
+                Log.e("Fetch hourly data: ", "Error");
+                e.printStackTrace();
+            }
+
+            // daily
+            try {
+                Response dailyResponse = client.newCall(dailyRequest).execute();
+                if (dailyResponse.isSuccessful() && dailyResponse.body() != null) {
+                    dailyData = dailyResponse.body().string();
+                    Log.e("Daily data: ", dailyData);
+                }
+            } catch (Exception e) {
+                Log.e("Fetch daily data: ", "Error");
+                e.printStackTrace();
+            }
+            onComplete.run();
+        }).start();
     }
 
     private void animationMicButton() {
@@ -268,79 +396,6 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
                 startActivity(new Intent(AssistantActivity.this, MainActivity.class));
             }
         });
-    }
-
-    @NonNull
-    private GenerativeModelFutures getModel() {
-        SafetySetting safetySetting = new SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH);
-        GenerationConfig.Builder builder = new GenerationConfig.Builder();
-        builder.temperature = 0.9f;
-        builder.topK = 16;
-        builder.topP = 0.1f;
-        GenerationConfig generationConfig = builder.build();
-        RequestOptions requestOptions = new RequestOptions();
-        Content content = new Content.Builder()
-                .addText("You are a friendly and knowledgeable weather assistant. You provide accurate and concise weather forecasts based on user queries, using data for current and future conditions. Be specific, include temperature ranges, precipitation chances, wind speeds, and any weather alerts if applicable. Tailor your responses to the user's location and requested time period. Make your tone clear, helpful, and approachable. If users ask for advice, offer practical tips based on the weather conditions, such as clothing suggestions, travel precautions, or outdoor activity recommendations." +
-                        ""
-//                        String.format("Location user prompt: %s.", cityName) +
-//                        String.format("Hourly weather data: %s.", hourlyWeatherData) +
-//                        String.format("Daily weather data: %s.", dailyWeatherData)
-                )
-                .build();
-
-        GenerativeModel gm = new GenerativeModel(
-                "gemini-1.5-flash",
-                BuildConfig.gemini_api,
-                generationConfig,
-                Collections.singletonList(safetySetting),
-                requestOptions,
-                null,
-                null,
-                content
-        );
-        return GenerativeModelFutures.from(gm);
-    }
-
-    private void getResponse(String message) {
-        Log.e("GEMINI: ", "Connected!!!");
-        Log.e("GEMINI: ", "User:" + message);
-
-        GenerativeModelFutures model = getModel();
-        Content content = new Content.Builder().addText(message).build();
-        Executor executor = Executors.newSingleThreadExecutor();
-
-        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
-        Futures.addCallback(
-                response,
-                new FutureCallback<GenerateContentResponse>() {
-                    @Override
-                    public void onSuccess(GenerateContentResponse result) {
-                        Log.e("GEMINI:  ", "Fetching successful");
-                        chatModelArrayList.add(new ChatModel(result.getText().toString(), ASSISTANT));
-                        Log.e("onSuccess: ", result.getText().toString());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                chatAdapter.notifyDataSetChanged();
-                            }
-                        });
-                        speak(result.getText().toString());
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Log.e("GEMINI: ", "Fetching Fail!!!");
-                        Log.e("Gemini: ", t.toString());
-                        chatModelArrayList.add(new ChatModel("Something went wrong, please try again!", ASSISTANT));
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                chatAdapter.notifyDataSetChanged();
-                            }
-                        });
-                    }
-                },
-                executor);
     }
 
     @SuppressLint("ObsoleteSdkInt")

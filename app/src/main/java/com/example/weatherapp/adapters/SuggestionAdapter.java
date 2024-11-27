@@ -1,4 +1,4 @@
-package com.example.weatherapp.locationSuggestion;
+package com.example.weatherapp.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -13,11 +13,11 @@ import androidx.annotation.NonNull;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
 import com.example.weatherapp.R;
+import com.example.weatherapp.domains.models.Suggestion;
+import com.example.weatherapp.domains.RvLocationSuggestionInterface;
 
 import java.io.IOException;
 import java.io.InputStream;
