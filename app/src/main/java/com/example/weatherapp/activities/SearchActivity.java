@@ -20,13 +20,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
 
-import com.example.weatherapp.favourite.LocationData;
+import com.example.weatherapp.domains.models.LocationData;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -53,7 +53,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements LocationListener {
     private String latitude;
     private String longitude;
     private LocationManager locationManager;
@@ -65,6 +65,7 @@ public class SearchActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private boolean favOn = false;
     private List<LocationData> locationDataList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,12 +78,15 @@ public class SearchActivity extends AppCompatActivity {
 
         if (latitude != null && !latitude.isEmpty() &&
                 longitude != null && !longitude.isEmpty()) {
-            Log.e("Suggestion/Main Intent: ", "Latitude = " + latitude + ", " + "Longitude = " + longitude);
+            Log.e("Suggestion Intent: ", "Latitude = " + latitude + ", " + "Longitude = " + longitude);
             fetchHourlyWeatherData();
         } else Log.e("Suggestion Intent: ", "latitude is null");
 
         defaultLocation();
-        if(user != null){
+        fetchCurrentHourlyWeatherData();
+        onClickCurrentLocationLayout();
+
+        if (user != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference("user").child(user.getUid()).child("history");
             TextView hiUser = findViewById(R.id.textViewHiUser);
             hiUser.setText(String.format("Hi, %s!", user.getDisplayName()));
@@ -127,7 +131,7 @@ public class SearchActivity extends AppCompatActivity {
                     ImageView weatherIcon = (ImageView) findViewById(R.id.weather_icon);
                     int resId = getResources().getIdentifier(icon, "drawable", getPackageName());
 
-                    runOnUiThread( () -> {
+                    runOnUiThread(() -> {
                         cityName.setText(city);
                         countryName.setText(country);
                         weatherDescription.setText(description);
@@ -145,24 +149,21 @@ public class SearchActivity extends AppCompatActivity {
 
     private void defaultLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                defaultLatitude = String.valueOf(location.getLatitude());
-                defaultLongitude = String.valueOf(location.getLongitude());
-                fetchCurrentHourlyWeatherData();
-                onClickCurrentLocationLayout();
-                locationManager.removeUpdates(this);
-            }
-            @Override public void onStatusChanged(String provider, int status, Bundle extras) {}
-            @Override
-            public void onProviderEnabled(String provider) {}
-            @Override
-            public void onProviderDisabled(String provider) {}
-        };
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission();
+            return;
+        }
+
+        // Fallback for last known location
+        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (lastKnownLocation != null) {
+            Log.e("Location: ", "GetLastKnownLocation");
+            onLocationChanged(lastKnownLocation);
+        } else {
+            // Request location update
+            Log.e("GetCurrentLocation", "Requesting location...");
+            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
         }
     }
 
@@ -330,7 +331,6 @@ public class SearchActivity extends AppCompatActivity {
     }
 
 //  History Search
-
     private void saveLocationToHistory(String city, String country, String description, int temperature, String latitude, String longitude, String icon){
         LocationData locationData = new LocationData(null, city, country, description, temperature, latitude, longitude,icon, getCurrentTime());
         databaseReference.setValue(locationData).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -424,6 +424,13 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    private void requestLocationPermission() {
+        Log.e("request: ", "location request");
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION
+        }, 100);
+    }
+
     private void removeLocationFromFav(String latitude, String longitude) {
         DatabaseReference favRef = FirebaseDatabase.getInstance().getReference("user").child(user.getUid()).child("favourite");
         favRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -469,5 +476,31 @@ public class SearchActivity extends AppCompatActivity {
                 Log.e("Firebase", "Failed save to fav");
             }
         });
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        defaultLatitude = String.valueOf(location.getLatitude());
+        defaultLongitude = String.valueOf(location.getLongitude());
+    }
+
+    @Override
+    public void onFlushComplete(int requestCode) {
+        LocationListener.super.onFlushComplete(requestCode);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+
     }
 }

@@ -1,7 +1,9 @@
 package com.example.weatherapp.activities;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -69,9 +71,21 @@ public class AQIActivity extends AppCompatActivity {
             Log.e("Main Intent: ", "Latitude is null");
         }
 
+        onClickFurtherInformation();
         onClickDropUpIcon();
         onClickDropDownIcon();
         goMain();
+    }
+
+    private void onClickFurtherInformation() {
+        TextView furtherInformation = findViewById(R.id.further_information);
+        furtherInformation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://en.wikipedia.org/wiki/Air_quality_index"));
+                startActivity(intent);
+            }
+        });
     }
 
     private void fetchAQIData(Runnable onComplete) {

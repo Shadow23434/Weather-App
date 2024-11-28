@@ -1,4 +1,4 @@
-package com.example.weatherapp.favourite;
+package com.example.weatherapp.domains.models;
 
 public class LocationData {
     private String latitude;

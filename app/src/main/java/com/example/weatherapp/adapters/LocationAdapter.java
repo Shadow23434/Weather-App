@@ -1,4 +1,4 @@
-package com.example.weatherapp.favourite;
+package com.example.weatherapp.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.R;
+import com.example.weatherapp.domains.FavLocationInterface;
+import com.example.weatherapp.domains.models.LocationData;
 
 import java.util.List;
 

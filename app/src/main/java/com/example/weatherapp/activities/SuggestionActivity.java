@@ -61,6 +61,9 @@ public class SuggestionActivity extends AppCompatActivity implements RvLocationS
                     longitude != null && !longitude.isEmpty()) {
                     goSearch();
                 }
+                else {
+                    Log.e("onQueryTextSubmit: ", "latitude is null");
+                }
                 return false;
             }
 
