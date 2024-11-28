@@ -51,11 +51,13 @@
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/light_purple"
         android:padding="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_16sdp"
         android:text="Grant permission"
         android:textColor="#7114ff"
         android:textSize="@dimen/_13ssp"
         android:textAllCaps="false"
         app:cornerRadius="@dimen/_20sdp"
+        app:layout_constraintStart_toEndOf="@+id/cancel_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/location_permission_image" />
 

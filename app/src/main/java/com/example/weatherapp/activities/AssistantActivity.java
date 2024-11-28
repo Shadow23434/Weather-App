@@ -2,8 +2,10 @@ package com.example.weatherapp.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -15,14 +17,19 @@ import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,7 +71,7 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
     private TextToSpeech textToSpeech;
     private SpeechRecognizer speechRecognizer;
     private Intent speechIntent;
-    public static final Integer RECORD_AUDIO_REQUEST_CODE = 1;
+//    public static final Integer RECORD_AUDIO_REQUEST_CODE = 1;
     private AppCompatImageView mic_btn;
     private TextView textget;
     private EditText editText;
@@ -99,12 +106,12 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
         mic_animation = findViewById(R.id.mic_animation);
 
         initRvChatSection();
-        checkPermission();
-        onSpeechRecognization(); // check here
+        checkPermission(); // if deny?
+        onSpeechRecognition(); // check here
         onEnterEditText();
         onClickSendMessage();
-        onClickMicButton();
-        animationMicButton();
+        onClickMicButton(); //
+        animationMicButton(); //
         goHome();
     }
 
@@ -146,7 +153,6 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
         Log.e("GEMINI: ", "Connected!!!");
         Log.e("GEMINI: ", "User:" + message);
 
-//        GenerativeModelFutures model = getModel();
         Content content = new Content.Builder().addText(message).build();
         Executor executor = Executors.newSingleThreadExecutor();
 
@@ -245,13 +251,16 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
                     NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
                     if (null != activeNetwork) {
                         if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                            Log.e("speechRecognizer", "OK");
                             speechRecognizer.startListening(speechIntent);
+                            Log.e("speechRecognizer", "Start listening");
                             mic_btn.setVisibility(View.INVISIBLE);
                             mic_animation.setVisibility(View.VISIBLE);
                         }
 
-                        if (activeNetwork.getType() == connectivityManager.TYPE_MOBILE) {
+                        if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
                             speechRecognizer.startListening(speechIntent);
+                            Log.e("speechRecognizer", "Start listening");
                             mic_btn.setVisibility(View.INVISIBLE);
                             mic_animation.setVisibility(View.VISIBLE);
                         }
@@ -263,10 +272,18 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
         });
     }
 
-    private void onSpeechRecognization() {
+    private void onSpeechRecognition() {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            Toast.makeText(this, "Speech recognition not available", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+          Log.e("onSpeedRecognition: ", "Speech recognition is available");
+        }
 
         if (speechRecognizer != null) {
             speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -299,19 +316,58 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
 
                 @Override
                 public void onError(int error) {
-
+                    String message;
+                    switch (error) {
+                        case SpeechRecognizer.ERROR_AUDIO:
+                            message = "Audio recording error";
+                            break;
+                        case SpeechRecognizer.ERROR_CLIENT:
+                            message = "Client-side error";
+                            break;
+                        case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                            message = "Insufficient permissions";
+                            break;
+                        case SpeechRecognizer.ERROR_NETWORK:
+                            message = "Network error";
+                            break;
+                        case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
+                            message = "Network timeout";
+                            break;
+                        case SpeechRecognizer.ERROR_NO_MATCH:
+                            message = "No recognition result matched";
+                            break;
+                        case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
+                            message = "RecognitionService busy";
+                            break;
+                        case SpeechRecognizer.ERROR_SERVER:
+                            message = "Server error";
+                            break;
+                        case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
+                            message = "No speech input";
+                            break;
+                        default:
+                            message = "Speech recognition error";
+                            break;
+                    }
+                    Log.e("SpeechRecognizer Error", message);
+                    Toast.makeText(AssistantActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
 
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onResults(Bundle results) {
-                    ArrayList<String> arrayList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                    textget.setText(arrayList.get(0));
-                    chatModelArrayList.add(new ChatModel(arrayList.get(0), USER));
-                    chatAdapter.notifyDataSetChanged();
-                    scrollChatSection();
-                    Log.e("onResults:", textget.getText().toString());
-                    getResponse(textget.getText().toString());
+                    if (results != null) {
+                        ArrayList<String> arrayList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                            textget.setText(arrayList.get(0));
+                            chatModelArrayList.add(new ChatModel(arrayList.get(0), USER));
+                            runOnUiThread(() -> chatAdapter.notifyDataSetChanged());
+                            scrollChatSection();
+                            Log.e("onResults:", "textget: " + textget.getText().toString());
+                            getResponse(textget.getText().toString());
+                    }
+                    else {
+                        Log.e("onResult:", "results is null");
+                    }
                 }
 
                 @Override
@@ -350,6 +406,7 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
                         });
                         getResponse(editText.getText().toString());
                         editText.setText("");
+                        hideKeyboard();
                         return true;
                     }
                     return false;
@@ -371,10 +428,18 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
                     scrollChatSection();
                     getResponse(editText.getText().toString());
                     editText.setText("");
+                    hideKeyboard();
                 }
             });
         } else {
             Toast.makeText(this, "Please enter the message", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
         }
     }
 
@@ -401,19 +466,62 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
     @SuppressLint("ObsoleteSdkInt")
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}
-                    ,RECORD_AUDIO_REQUEST_CODE);
+            requestRecordPermission();
+        }
+        else {
+            Log.e("Check permission : ", "PERMISSION GRANTED");
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == RECORD_AUDIO_REQUEST_CODE && grantResults.length>0) {
+        if (requestCode == 1 && grantResults.length>0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "PERMISSION GRANTED", Toast.LENGTH_SHORT).show();
+                Log.e("onRequestPermissionsResult", "Record permission granted");
+            }
+            else {
+                showRecordPermissionDialog();
             }
         }
+    }
+
+    private void requestRecordPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},1);
+    }
+
+    private void showRecordPermissionDialog() {
+        ConstraintLayout recordPermissionLayout = findViewById(R.id.record_permission_layout);
+        View view = LayoutInflater.from(AssistantActivity.this).inflate(R.layout.record_permission_dialog, recordPermissionLayout);
+        Button grantPermissionBtn = view.findViewById(R.id.grant_permission_btn);
+        Button cancelBtn = view.findViewById(R.id.cancel_btn);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AssistantActivity.this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+
+        grantPermissionBtn.findViewById(R.id.grant_permission_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                requestRecordPermission();
+            }
+        });
+
+        cancelBtn.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                Toast.makeText(AssistantActivity.this, "Permission is necessary for the app to work. Microphone button is disable.", Toast.LENGTH_SHORT).show();
+//                finishAffinity(); // Closes all activities and exits the app
+//                System.exit(0);
+            }
+        });
+
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 
     @Override
@@ -444,6 +552,7 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.e("onDestroy: ", "Destroy");
         speechRecognizer.destroy();
         if (textToSpeech != null) {
             textToSpeech.stop();

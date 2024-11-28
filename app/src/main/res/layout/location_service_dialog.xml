@@ -3,16 +3,16 @@
     android:layout_width="@dimen/_300sdp"
     android:layout_height="wrap_content"
     android:padding="@dimen/_8sdp"
-    android:id="@+id/gps_service_layout"
+    android:id="@+id/location_service_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/dialog_bg"
     android:layout_gravity="center">
 
     <TextView
-        android:id="@+id/gps_service_header"
+        android:id="@+id/location_service_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="GPS service"
+        android:text="Location"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="@dimen/_20ssp"
@@ -22,26 +22,26 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/gps_service_content"
+        android:id="@+id/location_service_content"
         android:layout_width="@dimen/_200sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
-        android:text="GPS service are disabled. Please go to settings to enable it."
+        android:text="Location permission is permanently denied. Please go to app settings to enable it."
         android:textSize="@dimen/_14ssp"
         android:textColor="@color/white"
         android:gravity="center"
-        app:layout_constraintStart_toStartOf="@id/gps_service_header"
-        app:layout_constraintEnd_toEndOf="@id/gps_service_header"
-        app:layout_constraintTop_toBottomOf="@id/gps_service_header"/>
+        app:layout_constraintStart_toStartOf="@id/location_service_header"
+        app:layout_constraintEnd_toEndOf="@id/location_service_header"
+        app:layout_constraintTop_toBottomOf="@id/location_service_header"/>
 
     <ImageView
-        android:id="@+id/location_permission_image"
+        android:id="@+id/location_service_image"
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_100sdp"
-        android:background="@drawable/gps_icon"
-        app:layout_constraintTop_toBottomOf="@id/gps_service_content"
-        app:layout_constraintStart_toStartOf="@id/gps_service_header"
-        app:layout_constraintEnd_toEndOf="@id/gps_service_header"/>
+        android:background="@drawable/map_icon"
+        app:layout_constraintTop_toBottomOf="@id/location_service_content"
+        app:layout_constraintStart_toStartOf="@id/location_service_header"
+        app:layout_constraintEnd_toEndOf="@id/location_service_header"/>
 
     <Button
         android:id="@+id/open_settings_btn"
@@ -57,8 +57,9 @@
         android:textSize="@dimen/_13ssp"
         android:textAllCaps="false"
         app:cornerRadius="@dimen/_20sdp"
+        app:layout_constraintStart_toEndOf="@+id/cancel_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/location_permission_image" />
+        app:layout_constraintTop_toBottomOf="@id/location_service_image" />
 
     <Button
         android:id="@+id/cancel_btn"
@@ -70,10 +71,11 @@
         android:gravity="center"
         android:layout_marginTop="@dimen/_8sdp"
         android:padding="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_16sdp"
         android:textColor="#7114ff"
         app:cornerRadius="@dimen/_20sdp"
         android:backgroundTint="@color/light_purple"
-        app:layout_constraintTop_toBottomOf="@id/location_permission_image"
+        app:layout_constraintTop_toBottomOf="@id/location_service_image"
         app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
