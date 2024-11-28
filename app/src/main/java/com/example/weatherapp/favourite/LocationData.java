@@ -1,4 +1,4 @@
-package com.example.weatherapp.database;
+package com.example.weatherapp.favourite;
 
 public class LocationData {
     private String latitude;
@@ -8,11 +8,13 @@ public class LocationData {
     private int temperature;
     private String countryName;
     private String description;
+    private String icon;
+    private String key;
 
     public LocationData() {
     }
 
-    public LocationData(String cityName,  String countryName ,String description, int temperature, String latitude, String longitude, String timestamp) {
+    public LocationData(String key, String cityName,  String countryName ,String description, int temperature, String latitude, String longitude,String icon, String timestamp) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.timestamp = timestamp;
@@ -20,6 +22,8 @@ public class LocationData {
         this.temperature = temperature;
         this.countryName = countryName;
         this.description = description;
+        this.icon = icon;
+        this.key = key;
     }
 
     public String getLatitude() {
@@ -48,6 +52,18 @@ public class LocationData {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
 

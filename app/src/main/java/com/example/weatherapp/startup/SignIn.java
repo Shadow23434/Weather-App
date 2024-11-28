@@ -40,7 +40,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
@@ -50,6 +54,7 @@ public class SignIn extends AppCompatActivity {
     private FirebaseAuth fAuth;
     private FirebaseDatabase database;
     private GoogleSignInClient mGoogleSignInClient;
+    private DatabaseReference databaseReference;
     private static int RC_SIGN_IN = 9000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,13 +210,28 @@ public class SignIn extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             FirebaseUser user = fAuth.getCurrentUser();
-                            HashMap<String, String> map = new HashMap<>();
+                            databaseReference = database.getReference("user");
+                            databaseReference.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    UserId da ton tai
+                                    if(snapshot.exists()){
+                                        Log.d("Firebase", "User da ton tai");
+                                    } else {
+                                        HashMap<String, String> map = new HashMap<>();
+                                        map.put("id", user.getUid());
+                                        map.put("name", user.getDisplayName());
+                                        map.put("profile", "null");
+                                        map.put("email", user.getEmail());
+                                        database.getReference().child("user").child(user.getUid()).setValue(map);
+                                    }
+                                }
 
-                            map.put("id", user.getUid());
-                            map.put("name", user.getDisplayName());
-                            map.put("profile", user.getPhotoUrl().toString());
-                            map.put("email", user.getEmail());
-                            database.getReference().child("user").child(user.getUid()).setValue(map);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.d("Firebase", "Failed to connect firebase");
+                                }
+                            });
                             Intent intent = new Intent(SignIn.this, MainActivity.class);
                             startActivity(intent);
                         }
