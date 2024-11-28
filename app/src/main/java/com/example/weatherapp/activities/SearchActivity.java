@@ -88,9 +88,23 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 
         if (user != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference("user").child(user.getUid()).child("history");
-            TextView hiUser = findViewById(R.id.textViewHiUser);
-            hiUser.setText(String.format("Hi, %s!", user.getDisplayName()));
-            loadHistoryLocation();
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("user").child(user.getUid());
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String name = snapshot.child("name").getValue(String.class);
+                        TextView hiUser = findViewById(R.id.textViewHiUser);
+                        hiUser.setText(String.format("Hi, %s!", name));
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Firebase", "Error reading user data", error.toException());
+                }
+            });
+//            loadHistoryLocation();
             checkLocationInFav();
         } else {
             Log.e("User", "user not log in");
@@ -245,7 +259,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                     Log.d("latitude", longitude);
                     Log.d("defaultLatitude", defaultLatitude);
                     Log.d("defaultLongitude", defaultLongitude);
-                    saveLocationToHistory(city, country, description, temperature, latitude, longitude, icon);
+//                    saveLocationToHistory(city, country, description, temperature, latitude, longitude, icon);
                     locationDataList.add(new LocationData(null, city, country, description, temperature, latitude, longitude, icon, getCurrentTime()));
 
                     TextView cityName = (TextView) findViewById(R.id.history_city_name);
@@ -331,6 +345,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     }
 
 //  History Search
+<<<<<<< HEAD
     private void saveLocationToHistory(String city, String country, String description, int temperature, String latitude, String longitude, String icon){
         LocationData locationData = new LocationData(null, city, country, description, temperature, latitude, longitude,icon, getCurrentTime());
         databaseReference.setValue(locationData).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -345,33 +360,50 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             }
         });
     }
+=======
+
+//    private void saveLocationToHistory(String city, String country, String description, int temperature, String latitude, String longitude, String icon){
+//        LocationData locationData = new LocationData(null, city, country, description, temperature, latitude, longitude,icon, getCurrentTime());
+//        databaseReference.setValue(locationData).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                Log.d("Firebase" , "Location saved");
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.e("Firebase", "Failed save history");
+//            }
+//        });
+//    }
+>>>>>>> 3e277cb6ffffc7c5fa05a063632c123f38293ede
 
     @NonNull
     private String getCurrentTime() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
     }
 
-    private void loadHistoryLocation(){
-        LinearLayout historyLayout = findViewById(R.id.history_location_layout);
-        if(databaseReference != null) {
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        LocationData locationData = snapshot.getValue(LocationData.class);
-                        if (locationData != null) {
-                            updateLayout(locationData);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Firebase", "Failed to load location history");
-                }
-            });
-        }
-    }
+//    private void loadHistoryLocation(){
+//        LinearLayout historyLayout = findViewById(R.id.history_location_layout);
+//        if(databaseReference != null) {
+//            databaseReference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                        LocationData locationData = snapshot.getValue(LocationData.class);
+//                        if (locationData != null) {
+//                            updateLayout(locationData);
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//                    Log.e("Firebase", "Failed to load location history");
+//                }
+//            });
+//        }
+//    }
 
     private void updateLayout(LocationData locationData) {
         LinearLayout historyLayout = findViewById(R.id.history_location_layout);
