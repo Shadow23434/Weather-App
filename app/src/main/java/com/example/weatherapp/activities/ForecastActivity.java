@@ -3,7 +3,6 @@ package com.example.weatherapp.activities;
 import static java.lang.Math.round;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,13 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
-import com.example.weatherapp.daily.Daily;
-import com.example.weatherapp.daily.DailyAdapter;
-import com.example.weatherapp.hourly.Hourly;
+import com.example.weatherapp.domains.models.Daily;
+import com.example.weatherapp.adapters.DailyAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.time.LocalDate;
 import java.time.format.TextStyle;

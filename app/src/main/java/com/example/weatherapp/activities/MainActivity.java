@@ -5,8 +5,7 @@ import static java.lang.Math.round;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,8 +15,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,10 +36,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
-import com.example.weatherapp.daily.WeatherData;
-import com.example.weatherapp.daily.WeatherDataCallback;
-import com.example.weatherapp.hourly.HourlyAdapter;
-import com.example.weatherapp.hourly.Hourly;
+import com.example.weatherapp.domains.WeatherData;
+import com.example.weatherapp.domains.WeatherDataCallback;
+import com.example.weatherapp.adapters.HourlyAdapter;
+import com.example.weatherapp.domains.models.Hourly;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
 import com.google.ai.client.generativeai.type.BlockThreshold;
@@ -61,9 +64,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private AlertDialog enableGPSDialog; // prompt user to enable GPS service
     private int retryCount = 0;
     private static final int MAX_RETRY_ATTEMPTS = 3;
-    private String city; // a string has no space
     private String latitude;
     private String longitude;
     private WeatherData weatherData;
@@ -112,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             getCurrentLocation();
         }
 
+        goAQI();
         onClickDropUpIcon();
         onClickDropDownIcon();
         onClickLocationIcon();
@@ -120,11 +124,23 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         goNext7Day();
     }
 
+    private void goAQI() {
+        LinearLayout aqiLayout = findViewById(R.id.aqi_layout);
+        aqiLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AQIActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
+            }
+        });
+    }
+
     private void onClickDropDownIcon() {
         dropDownIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("onClickDropDownIcon: ", "OK");
                 shortWeatherDescription.setVisibility(View.VISIBLE);
                 dropDownIcon.setVisibility(View.INVISIBLE);
                 dropUpIcon.setVisibility(View.VISIBLE);
@@ -136,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         dropUpIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("onClickDropUpIcon: ", "OK");
                 shortWeatherDescription.setVisibility(View.GONE);
                 dropUpIcon.setVisibility(View.INVISIBLE);
                 dropDownIcon.setVisibility(View.VISIBLE);
@@ -207,8 +222,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (latitude != null && longitude != null) {
             fetchDailyWeatherData();
             fetchHourlyWeatherData(items, () -> {
-                    Log.e("Current Location = ", currentLocation);
-                    Log.e("Current Temperature = ", currentTemperature);
                     if (currentLocation != null &&  currentTemperature!= null && weatherCondition != null) {
                         generateShortWeatherDescription();
                     }
@@ -303,16 +316,49 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     int max_temp = (int) round(d_max_temp);
                     int min_temp = (int) round(d_min_temp);
 
+                    Double d_precipitation = currentDayData.getDouble("precip");
+                    int precipitation = (int) Math.round(d_precipitation);
+                    String humidity = currentDayData.getString("rh");
+                    Double wind_spd_ms = currentDayData.getDouble("wind_spd");
+                    Double wind_spd_kmh = round(wind_spd_ms * 3.6) / 100.0;
+                    String windSpeed = wind_spd_kmh.toString();
+
+                    Double d_visibility = currentDayData.getDouble("vis");
+                    int visibility = (int) Math.round(d_visibility);
+                    String pressure = currentDayData.getString("pres");
+                    Long l_sunset = currentDayData.getLong("sunset_ts");
+                    Long l_sunrise = currentDayData.getLong("sunrise_ts");
+                    String sunset = convertTimestamp(l_sunset);
+                    String sunrise = convertTimestamp(l_sunrise);
+
                     TextView tvCity = (TextView) findViewById(R.id.city);
                     TextView tvCountry = (TextView) findViewById(R.id.country);
                     TextView maxTemp = (TextView) findViewById(R.id.max_temp);
                     TextView minTemp = (TextView) findViewById(R.id.min_temp);
+
+                    TextView tvPrecipitation = findViewById(R.id.precipitation);
+                    TextView tvHumidity = findViewById(R.id.humidity);
+                    TextView tvWindSpeed = findViewById(R.id.wind_speed);
+
+                    TextView tvVisibility = findViewById(R.id.visibility);
+                    TextView tvPressure = findViewById(R.id.pressure);
+                    TextView tvSunset = findViewById(R.id.sunset);
+                    TextView tvSunrise = findViewById(R.id.sunrise);
 
                     runOnUiThread(() -> {
                         tvCity.setText(cityName + ", ");
                         tvCountry.setText(countryName);
                         maxTemp.setText(max_temp + "°/");
                         minTemp.setText(min_temp + "°");
+
+                        tvPrecipitation.setText(precipitation + "%");
+                        tvHumidity.setText(humidity + "%");
+                        tvWindSpeed.setText(windSpeed + " Km");
+
+                        tvVisibility.setText(visibility + " Km");
+                        tvPressure.setText(pressure + " Mb");
+                        tvSunset.setText(sunset);
+                        tvSunrise.setText(sunrise);
                     });
                 }
             } catch (Exception e) {
@@ -360,21 +406,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 checkGPSEnabledAndProceed();
             } else {
                 Log.e("Location", "Location permission denied");
-                // User selected "Denined"
-                // App don't run here
+                // User selected "Deny"
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                    new AlertDialog.Builder(this)
-                            .setMessage("This app needs location access to function properly. Please grant the permission.")
-                            .setPositiveButton("Grant Permission", (dialog, which) -> requestLocationPermission())
-                            .setNegativeButton("Cancel", (dialog, which) -> {
-                                Toast.makeText(this, "Permission is necessary for the app to work", Toast.LENGTH_SHORT).show();
-                            })
-                            .create()
-                            .show();
+                    showLocationPermissionDialog();
                 } else {
-                    // User selected "Don't ask again"
-                    // App run here
+                    // User selected "Don't ask again" or close app
+                    // App don't run here
                     new AlertDialog.Builder(this)
                             .setMessage("Location permission is permanently denied. Please go to app settings to enable it.")
                             .setPositiveButton("Open Settings", (dialog, which) -> {
@@ -393,6 +430,40 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
     }
 
+    private void showLocationPermissionDialog() {
+        ConstraintLayout locationPermissionLayout = findViewById(R.id.location_permission_layout);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.location_permission_dialog, locationPermissionLayout);
+        Button grantPermissionBtn = view.findViewById(R.id.grant_permission_btn);
+        Button cancelBtn = view.findViewById(R.id.cancel_btn);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+
+        grantPermissionBtn.findViewById(R.id.grant_permission_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                requestLocationPermission();
+            }
+        });
+
+        cancelBtn.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                Toast.makeText(MainActivity.this, "Permission is necessary for the app to work", Toast.LENGTH_SHORT).show();
+                finishAffinity(); // Closes all activities and exits the app
+                System.exit(0);
+            }
+        });
+
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+    }
+
     private void checkGPSEnabledAndProceed() {
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -401,18 +472,37 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             proceedWithLocationEnabled();
         }
     }
-
     private void promptEnableGPS() {
-        enableGPSDialog = new AlertDialog.Builder(this)
-                .setMessage("Location services are disabled. Please enable them for the app to function correctly.")
-                .setPositiveButton("Enable", (dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivityForResult(intent, 101);
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    Toast.makeText(this, "GPS service not enabled", Toast.LENGTH_SHORT).show();
-                })
-                .create();
+        ConstraintLayout gpsServiceLayout = findViewById(R.id.gps_service_layout);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.gps_service_dialog, gpsServiceLayout);
+        Button openSettingsBtn = view.findViewById(R.id.open_settings_btn);
+        Button cancelBtn = view.findViewById(R.id.cancel_btn);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setView(view);
+        enableGPSDialog = builder.create();
+
+        openSettingsBtn.findViewById(R.id.open_settings_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(intent, 101);
+            }
+        });
+
+        cancelBtn.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enableGPSDialog.dismiss();
+                Toast.makeText(MainActivity.this, "GPS service not enabled", Toast.LENGTH_SHORT).show();
+                finishAffinity(); // Closes all activities and exits the app
+                System.exit(0);
+            }
+        });
+
+        if (enableGPSDialog.getWindow() != null) {
+            enableGPSDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
         enableGPSDialog.show();
     }
 
@@ -443,6 +533,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         return locale.getDisplayCountry();
     }
 
+    @NonNull
+    private String convertTimestamp(long time) {
+            // Convert to milliseconds
+            Date date = new Date(time * 1000);
+
+            // 12-hour clock with AM/PM
+            SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+
+            String formattedTime = formatter.format(date);
+            return formattedTime;
+    }
+
+
     private void onClickBottomAppBar() {
         ImageView search_appBar_icon = findViewById(R.id.search_appBar_icon);
         ImageView favor_appBar_icon = findViewById(R.id.favor_appBar_icon);
@@ -451,7 +554,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         search_appBar_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SearchActivity.class));
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
             }
         });
 
@@ -476,7 +582,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, AssistantActivity.class));
+                Intent intent = new Intent(MainActivity.this, AssistantActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
             }
         });
     }
@@ -500,18 +609,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         String withoutDiacritics = normalized.replaceAll("\\p{M}", "");
         // Replace special Vietnamese letters
         return withoutDiacritics.replace("Đ", "D").replace("đ", "d");
-    }
-
-    private String formatCityName(String address) {
-        if (address != null) {
-            address = removeDiacritics(address);
-            String[] arrayCity = address.trim().split("\\s");
-            String cityName = "";
-            for (String word : arrayCity) cityName += word;
-            Log.e("Current city: ", cityName);
-            return cityName;
-        }
-        return null;
     }
 
     private void getCurrentLocation() {

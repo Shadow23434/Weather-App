@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_300sdp"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/_8sdp"
+    android:id="@+id/gps_service_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/dialog_bg"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/gps_service_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GPS service"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/_20ssp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/gps_service_content"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:text="GPS service are disabled. Please go to settings to enable it."
+        android:textSize="@dimen/_14ssp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@id/gps_service_header"
+        app:layout_constraintEnd_toEndOf="@id/gps_service_header"
+        app:layout_constraintTop_toBottomOf="@id/gps_service_header"/>
+
+    <ImageView
+        android:id="@+id/location_permission_image"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:background="@drawable/gps_icon"
+        app:layout_constraintTop_toBottomOf="@id/gps_service_content"
+        app:layout_constraintStart_toStartOf="@id/gps_service_header"
+        app:layout_constraintEnd_toEndOf="@id/gps_service_header"/>
+
+    <Button
+        android:id="@+id/open_settings_btn"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/light_purple"
+        android:padding="@dimen/_4sdp"
+        android:text="Open Settings"
+        android:textColor="#7114ff"
+        android:textSize="@dimen/_13ssp"
+        android:textAllCaps="false"
+        app:cornerRadius="@dimen/_20sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location_permission_image" />
+
+    <Button
+        android:id="@+id/cancel_btn"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:text="Close app"
+        android:textSize="@dimen/_13ssp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:padding="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:textColor="#7114ff"
+        app:cornerRadius="@dimen/_20sdp"
+        android:backgroundTint="@color/light_purple"
+        app:layout_constraintTop_toBottomOf="@id/location_permission_image"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
