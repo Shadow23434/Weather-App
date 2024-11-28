@@ -1,6 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    android:layout_width="@dimen/_300sdp"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/_8sdp"
+    android:id="@+id/record_permission_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/dialog_bg"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/record_permission_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Record"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/_20ssp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/record_permission_content"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:text="This app needs record access to function properly. Please grant the permission."
+        android:textSize="@dimen/_14ssp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@id/record_permission_header"
+        app:layout_constraintEnd_toEndOf="@id/record_permission_header"
+        app:layout_constraintTop_toBottomOf="@id/record_permission_header"/>
+
+    <ImageView
+        android:id="@+id/record_permission_image"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:background="@drawable/micro_image"
+        app:layout_constraintTop_toBottomOf="@id/record_permission_content"
+        app:layout_constraintStart_toStartOf="@id/record_permission_header"
+        app:layout_constraintEnd_toEndOf="@id/record_permission_header"/>
+
+    <Button
+        android:id="@+id/grant_permission_btn"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/light_purple"
+        android:padding="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:text="Grant permission"
+        android:textColor="#7114ff"
+        android:textSize="@dimen/_13ssp"
+        android:textAllCaps="false"
+        app:cornerRadius="@dimen/_20sdp"
+        app:layout_constraintStart_toEndOf="@+id/cancel_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/record_permission_image" />
+
+    <Button
+        android:id="@+id/cancel_btn"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:text="Cancel"
+        android:textSize="@dimen/_13ssp"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:padding="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:textColor="#7114ff"
+        app:cornerRadius="@dimen/_20sdp"
+        android:backgroundTint="@color/light_purple"
+        app:layout_constraintTop_toBottomOf="@id/record_permission_image"
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -16,15 +17,19 @@ import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -461,8 +466,7 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
     @SuppressLint("ObsoleteSdkInt")
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}
-                    ,1);
+            requestRecordPermission();
         }
         else {
             Log.e("Check permission : ", "PERMISSION GRANTED");
@@ -476,7 +480,48 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.e("onRequestPermissionsResult", "Record permission granted");
             }
+            else {
+                showRecordPermissionDialog();
+            }
         }
+    }
+
+    private void requestRecordPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},1);
+    }
+
+    private void showRecordPermissionDialog() {
+        ConstraintLayout recordPermissionLayout = findViewById(R.id.record_permission_layout);
+        View view = LayoutInflater.from(AssistantActivity.this).inflate(R.layout.record_permission_dialog, recordPermissionLayout);
+        Button grantPermissionBtn = view.findViewById(R.id.grant_permission_btn);
+        Button cancelBtn = view.findViewById(R.id.cancel_btn);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AssistantActivity.this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+
+        grantPermissionBtn.findViewById(R.id.grant_permission_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                requestRecordPermission();
+            }
+        });
+
+        cancelBtn.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                Toast.makeText(AssistantActivity.this, "Permission is necessary for the app to work. Microphone button is disable.", Toast.LENGTH_SHORT).show();
+//                finishAffinity(); // Closes all activities and exits the app
+//                System.exit(0);
+            }
+        });
+
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 
     @Override

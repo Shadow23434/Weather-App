@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private RecyclerView rvHourly;
     private LocationManager locationManager; // request location
     private AlertDialog enableGPSDialog; // prompt user to enable GPS service
+    private AlertDialog locationDialog; // prompt user to enable location service
     private int retryCount = 0;
     private static final int MAX_RETRY_ATTEMPTS = 3;
     private String latitude;
@@ -406,28 +407,52 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 checkGPSEnabledAndProceed();
             } else {
                 Log.e("Location", "Location permission denied");
-                // User selected "Deny"
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    // User selected "Deny"
                     showLocationPermissionDialog();
-                } else {
+                }
+                else {
                     // User selected "Don't ask again" or close app
-                    // App don't run here
-                    new AlertDialog.Builder(this)
-                            .setMessage("Location permission is permanently denied. Please go to app settings to enable it.")
-                            .setPositiveButton("Open Settings", (dialog, which) -> {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                                intent.setData(uri);
-                                startActivity(intent);
-                            })
-                            .setNegativeButton("Cancel", (dialog, which) -> {
-                                Toast.makeText(this, "Permission is necessary for the app to work", Toast.LENGTH_SHORT).show();
-                            })
-                            .create()
-                            .show();
+                    showLocationServiceDialog();
                 }
             }
         }
+    }
+
+    private void showLocationServiceDialog() {
+        ConstraintLayout locationPermissionLayout = findViewById(R.id.location_service_layout);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.location_service_dialog, locationPermissionLayout);
+        Button grantPermissionBtn = view.findViewById(R.id.open_settings_btn);
+        Button cancelBtn = view.findViewById(R.id.cancel_btn);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setView(view);
+        locationDialog = builder.create();
+
+        grantPermissionBtn.findViewById(R.id.open_settings_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivityForResult(intent, 102);
+            }
+        });
+
+        cancelBtn.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locationDialog.dismiss();
+                Toast.makeText(MainActivity.this, "Permission is necessary for the app to work", Toast.LENGTH_SHORT).show();
+                finishAffinity(); // Closes all activities and exits the app
+                System.exit(0);
+            }
+        });
+
+        if (locationDialog.getWindow() != null) {
+            locationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        locationDialog.show();
     }
 
     private void showLocationPermissionDialog() {
@@ -472,6 +497,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             proceedWithLocationEnabled();
         }
     }
+
     private void promptEnableGPS() {
         ConstraintLayout gpsServiceLayout = findViewById(R.id.gps_service_layout);
         View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.gps_service_dialog, gpsServiceLayout);
@@ -509,6 +535,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 102) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                if (locationDialog != null) locationDialog.dismiss();
+                proceedWithLocationEnabled();
+            }
+        }
+
         if (requestCode == 101) {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                     && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -601,14 +635,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 startActivity(intent);
             }
         });
-    }
-
-    @NonNull
-    private String removeDiacritics(String string) {
-        String normalized = Normalizer.normalize(string, Normalizer.Form.NFD);
-        String withoutDiacritics = normalized.replaceAll("\\p{M}", "");
-        // Replace special Vietnamese letters
-        return withoutDiacritics.replace("Đ", "D").replace("đ", "d");
     }
 
     private void getCurrentLocation() {

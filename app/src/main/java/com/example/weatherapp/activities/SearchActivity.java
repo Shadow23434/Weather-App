@@ -66,7 +66,7 @@ public class SearchActivity extends AppCompatActivity {
 
         if (latitude != null && !latitude.isEmpty() &&
                 longitude != null && !longitude.isEmpty()) {
-            Log.e("Suggestion Intent: ", "Latitude = " + latitude + ", " + "Longitude = " + longitude);
+            Log.e("Suggestion/Main Intent: ", "Latitude = " + latitude + ", " + "Longitude = " + longitude);
             fetchHourlyWeatherData();
         } else Log.e("Suggestion Intent: ", "latitude is null");
 
