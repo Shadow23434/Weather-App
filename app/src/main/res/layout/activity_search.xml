@@ -131,13 +131,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" >
 
-                            <ImageView
-                                android:id="@+id/ic_fav"
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:background="@drawable/linear_background_purple"
-                                android:src="@drawable/ic_fav_border" />
-
                             <TextView
                                 android:id="@+id/temp"
                                 android:layout_width="wrap_content"
@@ -174,6 +167,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_gravity="center"
+                android:visibility="gone"
                 android:background="@drawable/linear_background_purple"
                 android:padding="@dimen/_8sdp"
                 android:gravity="end">
@@ -223,16 +217,26 @@
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="@dimen/_100sdp"
                             android:background="@android:color/transparent"/>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" >
 
+                        <ImageView
+                            android:id="@+id/ic_fav"
+                            android:layout_width="@dimen/_40sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:background="@drawable/linear_background_purple"
+                            android:src="@drawable/ic_fav_border" />
                         <TextView
                             android:id="@+id/history_temp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=""
+                            android:layout_centerInParent="true"
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             android:textSize="@dimen/_18ssp"/>
-
+                        </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
 

@@ -2,7 +2,13 @@ package com.example.weatherapp.activities;
 
 import static java.lang.Math.round;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.weatherapp.BuildConfig;
@@ -49,6 +56,10 @@ import okhttp3.Response;
 public class SearchActivity extends AppCompatActivity {
     private String latitude;
     private String longitude;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private String defaultLatitude;
+    private String defaultLongitude;
     private FirebaseUser user;
     private FirebaseAuth fAuth;
     private DatabaseReference databaseReference;
@@ -61,8 +72,8 @@ public class SearchActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
 
-        latitude = getIntent().getStringExtra("latitude");
-        longitude = getIntent().getStringExtra("longitude");
+        latitude = getIntent().getStringExtra("sLatitude");
+        longitude = getIntent().getStringExtra("sLongitude");
 
         if (latitude != null && !latitude.isEmpty() &&
                 longitude != null && !longitude.isEmpty()) {
@@ -70,18 +81,89 @@ public class SearchActivity extends AppCompatActivity {
             fetchHourlyWeatherData();
         } else Log.e("Suggestion Intent: ", "latitude is null");
 
+        defaultLocation();
         if(user != null){
             databaseReference = FirebaseDatabase.getInstance().getReference("user").child(user.getUid()).child("history");
+            TextView hiUser = findViewById(R.id.textViewHiUser);
+            hiUser.setText(String.format("Hi, %s!", user.getDisplayName()));
             loadHistoryLocation();
             checkLocationInFav();
         } else {
             Log.e("User", "user not log in");
         }
 
-        onClickCurrentLocationLayout();
+        onClickHistoryLocationLayout();
         onSearch();
         onClickBottomAppBar();
         onClickFloatingButton();
+    }
+
+    private void fetchCurrentHourlyWeatherData() {
+        // Hourly weather data
+        String url = String.format("https://api.weatherbit.io/v2.0/forecast/hourly?&lat=%s&lon=%s&key=%s&hours=12", defaultLatitude, defaultLongitude, BuildConfig.weather_api);
+        Log.e("Fetching hourly API: ", url);
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+
+        new Thread(() -> {
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    JSONObject data = jsonObject.getJSONArray("data").getJSONObject(0);
+
+                    String city = jsonObject.getString("city_name");
+                    String country = getCountryName(jsonObject.getString("country_code"));
+                    String description = data.getJSONObject("weather").getString("description");
+                    int temperature = (int) Math.round(data.getDouble("temp"));
+                    String icon = data.getJSONObject("weather").getString("icon");
+
+                    TextView cityName = (TextView) findViewById(R.id.city_name);
+                    TextView countryName = (TextView) findViewById(R.id.country_name);
+                    TextView weatherDescription = (TextView) findViewById(R.id.weather_description);
+                    TextView temp = (TextView) findViewById(R.id.temp);
+                    ImageView weatherIcon = (ImageView) findViewById(R.id.weather_icon);
+                    int resId = getResources().getIdentifier(icon, "drawable", getPackageName());
+
+                    runOnUiThread( () -> {
+                        cityName.setText(city);
+                        countryName.setText(country);
+                        weatherDescription.setText(description);
+                        temp.setText(temperature + "℃");
+                        Glide.with(this).load(resId).into(weatherIcon);
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Fetching hourly API: ", e.getMessage());
+                runOnUiThread(() -> Toast.makeText(SearchActivity.this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show());
+            }
+        }).start();
+    }
+
+    private void defaultLocation() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                defaultLatitude = String.valueOf(location.getLatitude());
+                defaultLongitude = String.valueOf(location.getLongitude());
+                fetchCurrentHourlyWeatherData();
+                onClickCurrentLocationLayout();
+                locationManager.removeUpdates(this);
+            }
+            @Override public void onStatusChanged(String provider, int status, Bundle extras) {}
+            @Override
+            public void onProviderEnabled(String provider) {}
+            @Override
+            public void onProviderDisabled(String provider) {}
+        };
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
     }
 
     private void checkLocationInFav() {
@@ -117,6 +199,19 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SearchActivity.this, MainActivity.class);
+                intent.putExtra("latitude", defaultLatitude);
+                intent.putExtra("longitude", defaultLongitude);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void onClickHistoryLocationLayout() {
+        LinearLayout currentLocationLayout = findViewById(R.id.history_location_layout);
+        currentLocationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SearchActivity.this, MainActivity.class);
                 intent.putExtra("latitude", latitude);
                 intent.putExtra("longitude", longitude);
                 startActivity(intent);
@@ -145,17 +240,23 @@ public class SearchActivity extends AppCompatActivity {
                     String description = data.getJSONObject("weather").getString("description");
                     int temperature = (int) Math.round(data.getDouble("temp"));
                     String icon = data.getJSONObject("weather").getString("icon");
+                    Log.d("latitude", latitude);
+                    Log.d("latitude", longitude);
+                    Log.d("defaultLatitude", defaultLatitude);
+                    Log.d("defaultLongitude", defaultLongitude);
                     saveLocationToHistory(city, country, description, temperature, latitude, longitude, icon);
                     locationDataList.add(new LocationData(null, city, country, description, temperature, latitude, longitude, icon, getCurrentTime()));
 
-                    TextView cityName = (TextView) findViewById(R.id.city_name);
-                    TextView countryName = (TextView) findViewById(R.id.country_name);
-                    TextView weatherDescription = (TextView) findViewById(R.id.weather_description);
-                    TextView temp = (TextView) findViewById(R.id.temp);
-                    ImageView weatherIcon = (ImageView) findViewById(R.id.weather_icon);
+                    TextView cityName = (TextView) findViewById(R.id.history_city_name);
+                    TextView countryName = (TextView) findViewById(R.id.history_country_name);
+                    TextView weatherDescription = (TextView) findViewById(R.id.history_weather_description);
+                    TextView temp = (TextView) findViewById(R.id.history_temp);
+                    ImageView weatherIcon = (ImageView) findViewById(R.id.history_weather_icon);
                     int resId = getResources().getIdentifier(icon, "drawable", getPackageName());
+                    LinearLayout linearLayout = findViewById(R.id.history_location_layout);
 
-                    runOnUiThread( () -> {
+                    runOnUiThread(() -> {
+                        linearLayout.setVisibility(View.VISIBLE);
                         cityName.setText(city);
                         countryName.setText(country);
                         weatherDescription.setText(description);
@@ -163,6 +264,7 @@ public class SearchActivity extends AppCompatActivity {
                         Glide.with(this).load(resId).into(weatherIcon);
                         onClickFavIcon();
                     });
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -251,22 +353,24 @@ public class SearchActivity extends AppCompatActivity {
 
     private void loadHistoryLocation(){
         LinearLayout historyLayout = findViewById(R.id.history_location_layout);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    LocationData locationData = snapshot.getValue(LocationData.class);
-                    if(locationData != null){
-                        updateLayout(locationData);
+        if(databaseReference != null) {
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        LocationData locationData = snapshot.getValue(LocationData.class);
+                        if (locationData != null) {
+                            updateLayout(locationData);
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Failed to load location history");
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Firebase", "Failed to load location history");
+                }
+            });
+        }
     }
 
     private void updateLayout(LocationData locationData) {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -75,11 +76,13 @@ public class SuggestionActivity extends AppCompatActivity implements RvLocationS
     }
 
     private void goSearch() {
+
         Intent intent = new Intent(SuggestionActivity.this, SearchActivity.class);
-        intent.putExtra("latitude", latitude);
-        intent.putExtra("longitude", longitude);
+        intent.putExtra("sLatitude", latitude);
+        intent.putExtra("sLongitude", longitude);
         startActivity(intent);
     }
+
     private void initRvLocationSuggestion(String newText) {
         suggestionArrayList = new ArrayList<>();
         rvLocationSuggestion = findViewById(R.id.rv_location_suggestion);
@@ -137,6 +140,8 @@ public class SuggestionActivity extends AppCompatActivity implements RvLocationS
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LinearLayout linearLayout = findViewById(R.id.history_location_layout);
+                linearLayout.setVisibility(View.VISIBLE);
                 startActivity(new Intent(SuggestionActivity.this, SearchActivity.class));
             }
         });
