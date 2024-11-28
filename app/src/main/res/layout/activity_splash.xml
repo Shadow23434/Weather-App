@@ -77,7 +77,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="0.115"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/getStartText"
@@ -88,13 +89,14 @@
             android:textColor="#362A84"
             android:textSize="34sp"
             android:textStyle="bold" />
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/getStartAnimation"
-            app:lottie_autoPlay="false"
-            app:lottie_rawRes="@raw/loading"
+            app:lottie_autoPlay="true"
+            app:lottie_rawRes="@raw/loading_animation"
             app:lottie_loop="true"
-            android:layout_width="@dimen/_300sdp"
-            android:layout_height="@dimen/_300sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:visibility="gone"/>
     </RelativeLayout>
