@@ -40,17 +40,17 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getStartAnimation.setVisibility(View.VISIBLE);
-                getStartAnimation.playAnimation();
+//                getStartAnimation.playAnimation();
                 textGetStart.setVisibility(View.GONE);
                 new Handler().postDelayed(this::resetButton, TIMER);
             }
 
             private void resetButton() {
-                getStartAnimation.pauseAnimation();
-                getStartAnimation.setVisibility(View.GONE);
-                textGetStart.setVisibility(View.VISIBLE);
+//                getStartAnimation.pauseAnimation();
                 Intent intent = new Intent(SplashActivity.this, SignIn.class);
                 startActivity(intent);
+                getStartAnimation.setVisibility(View.GONE);
+                textGetStart.setVisibility(View.VISIBLE);
             }
         });
         ImageView gif = findViewById(R.id.fallingStars);
