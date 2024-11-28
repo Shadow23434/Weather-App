@@ -127,15 +127,27 @@
                             android:layout_height="@dimen/_100sdp"
                             android:background="@android:color/transparent"/>
 
-                        <TextView
-                            android:id="@+id/temp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="30°C"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/_18ssp"/>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" >
 
+                            <ImageView
+                                android:id="@+id/ic_fav"
+                                android:layout_width="@dimen/_40sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:background="@drawable/linear_background_purple"
+                                android:src="@drawable/ic_fav_border" />
+
+                            <TextView
+                                android:id="@+id/temp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="30°C"
+                                android:layout_centerInParent="true"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/_18ssp"/>
+                        </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -145,6 +157,91 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_24sdp"
                     android:text="Few clouds"
+                    android:textSize="@dimen/_13ssp"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="History location"
+                android:layout_marginBottom="@dimen/_12sdp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16ssp"/>
+
+            <LinearLayout
+                android:id="@+id/history_location_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:background="@drawable/linear_background_purple"
+                android:padding="@dimen/_8sdp"
+                android:gravity="end">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="@dimen/_110sdp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:id="@+id/history_country_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="@dimen/_15ssp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"/>
+
+                        <TextView
+                            android:id="@+id/history_city_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="@dimen/_18ssp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginLeft="@dimen/_16sdp"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/history_weather_icon"
+                            android:layout_width="@dimen/_100sdp"
+                            android:layout_height="@dimen/_100sdp"
+                            android:background="@android:color/transparent"/>
+
+                        <TextView
+                            android:id="@+id/history_temp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/_18ssp"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/history_weather_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_24sdp"
+                    android:text=""
                     android:textSize="@dimen/_13ssp"
                     android:textColor="@color/white"/>
             </LinearLayout>
