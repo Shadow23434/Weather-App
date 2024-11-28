@@ -1,0 +1,4 @@
+package com.example.weatherapp.favourite;
+
+public interface FavLocationInterface {
+}
