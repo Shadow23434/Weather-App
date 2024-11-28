@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     showLocationPermissionDialog();
                 }
                 else {
-                    // User selected "Don't ask again" or close app
+                    // User selected "Don't ask again" and restart
                     showLocationServiceDialog();
                 }
             }

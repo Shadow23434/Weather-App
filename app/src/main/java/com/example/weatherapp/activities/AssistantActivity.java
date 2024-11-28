@@ -8,9 +8,11 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -26,11 +28,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,7 +75,7 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
     private TextToSpeech textToSpeech;
     private SpeechRecognizer speechRecognizer;
     private Intent speechIntent;
-//    public static final Integer RECORD_AUDIO_REQUEST_CODE = 1;
+    private AlertDialog recordDialog; // prompt user to enable record service
     private AppCompatImageView mic_btn;
     private TextView textget;
     private EditText editText;
@@ -481,13 +485,68 @@ public class AssistantActivity extends AppCompatActivity implements TextToSpeech
                 Log.e("onRequestPermissionsResult", "Record permission granted");
             }
             else {
-                showRecordPermissionDialog();
+                if (ActivityCompat.shouldShowRequestPermissionRationale(AssistantActivity.this, Manifest.permission.RECORD_AUDIO)) {
+                    // user selected deny
+                    showRecordPermissionDialog();
+                }
+                else {
+                    // user selected "don't ask again" and restart
+                    showRecordServiceDialog();
+                }
             }
         }
     }
 
     private void requestRecordPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},1);
+    }
+
+    private void showRecordServiceDialog() {
+        ConstraintLayout recordPermissionLayout = findViewById(R.id.record_service_layout);
+        View view = LayoutInflater.from(AssistantActivity.this).inflate(R.layout.record_service_dialog, recordPermissionLayout);
+        Button openSettingsBtn = view.findViewById(R.id.open_settings_btn);
+        Button cancelBtn = view.findViewById(R.id.cancel_btn);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AssistantActivity.this);
+        builder.setView(view);
+        recordDialog = builder.create();
+
+        openSettingsBtn.findViewById(R.id.open_settings_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivityForResult(intent, 102);
+            }
+        });
+
+        cancelBtn.findViewById(R.id.cancel_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recordDialog.dismiss();
+                Toast.makeText(AssistantActivity.this, "Permission is necessary for the app to work", Toast.LENGTH_SHORT).show();
+                finishAffinity(); // Closes all activities and exits the app
+                System.exit(0);
+            }
+        });
+
+        if (recordDialog.getWindow() != null) {
+            recordDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        recordDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 102) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                    == PackageManager.PERMISSION_GRANTED) {
+                if (recordDialog != null) recordDialog.dismiss();
+                Toast.makeText(AssistantActivity.this, "Record permission granted", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void showRecordPermissionDialog() {

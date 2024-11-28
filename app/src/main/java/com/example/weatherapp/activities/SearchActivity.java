@@ -345,7 +345,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     }
 
 //  History Search
-<<<<<<< HEAD
+
     private void saveLocationToHistory(String city, String country, String description, int temperature, String latitude, String longitude, String icon){
         LocationData locationData = new LocationData(null, city, country, description, temperature, latitude, longitude,icon, getCurrentTime());
         databaseReference.setValue(locationData).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -360,7 +360,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             }
         });
     }
-=======
+
 
 //    private void saveLocationToHistory(String city, String country, String description, int temperature, String latitude, String longitude, String icon){
 //        LocationData locationData = new LocationData(null, city, country, description, temperature, latitude, longitude,icon, getCurrentTime());
@@ -376,7 +376,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 //            }
 //        });
 //    }
->>>>>>> 3e277cb6ffffc7c5fa05a063632c123f38293ede
 
     @NonNull
     private String getCurrentTime() {
