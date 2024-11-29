@@ -10,10 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
 import com.example.weatherapp.domains.RvLocationSuggestionInterface;
 import com.example.weatherapp.domains.models.Suggestion;
@@ -23,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -97,12 +100,11 @@ public class SuggestionActivity extends AppCompatActivity implements RvLocationS
     }
 
     private void fetchLocationData(ArrayList<Suggestion> suggestionArrayList, String newText) {
-        String url = String.format("https://nominatim.openstreetmap.org/search?q=%s&format=json&addressdetails=1", newText);
+        String url = String.format("https://api.openweathermap.org/geo/1.0/direct?q=%s&limit=10&appid=%s", newText, BuildConfig.location_api);
         Log.e("Fetch location data: ", url);
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .header("User-Agent", "WebApp/1.0 (contact@example.com)")
                 .url(url)
                 .build();
 
@@ -117,8 +119,10 @@ public class SuggestionActivity extends AppCompatActivity implements RvLocationS
                     for (int i=0; i<jsonArray.length(); i++) {
                         JSONObject data = jsonArray.getJSONObject(i);
                         String cityName = data.getString("name");
-                        String displayName = data.getString("display_name");
-                        String country_code = data.getJSONObject("address").getString("country_code");
+                        String country_code = data.getString("country");
+                        country_code = country_code.toLowerCase();
+                        Log.e("Fetch location data: ", "country = " + country_code);
+                        String displayName = cityName + ", " + ((data.has("state")) ? data.getString("state") : "") + ", " + getCountryName(country_code);
                         String cityLatitude = String.valueOf(data.getDouble("lat"));
                         String cityLongitude = String.valueOf(data.getDouble("lon"));
 
@@ -159,5 +163,11 @@ public class SuggestionActivity extends AppCompatActivity implements RvLocationS
                 longitude != null && !longitude.isEmpty()) {
             goSearch();
         }
+    }
+
+    @NonNull
+    private String getCountryName(String countryCode) {
+        Locale locale = new Locale("", countryCode);
+        return locale.getDisplayCountry();
     }
 }

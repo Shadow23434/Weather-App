@@ -455,7 +455,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="@dimen/_8sdp"
-                        android:layout_marginStart="@dimen/_4sdp"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:background="@drawable/linearlayout_banner_bg">
@@ -490,6 +489,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="@dimen/_8sdp"
+                        android:layout_marginStart="@dimen/_4sdp"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:background="@drawable/linearlayout_banner_bg">

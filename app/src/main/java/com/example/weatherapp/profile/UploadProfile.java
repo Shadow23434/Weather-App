@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
+import com.example.weatherapp.BuildConfig;
 import com.example.weatherapp.R;
 import com.example.weatherapp.activities.AccountActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,9 +53,9 @@ public class UploadProfile extends AppCompatActivity {
         setContentView(R.layout.activity_upload_profile);
         if(!isMediaManagerInitialized) {
             Map config = new HashMap();
-            config.put("cloud_name", "cloud name");
-            config.put("api_key", "api key");
-            config.put("api_secret", "api_secret");
+            config.put("cloud_name", "ddehaxisw");
+            config.put("api_key", BuildConfig.cloud_api_key);
+            config.put("api_secret", BuildConfig.cloud_api_secret);
 //        config.put("secure", true);
             MediaManager.init(this, config);
             isMediaManagerInitialized = true;
