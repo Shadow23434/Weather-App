@@ -51,7 +51,7 @@
                 android:layout_marginRight="@dimen/_16sdp"
                 android:layout_marginBottom="@dimen/_16sdp"
                 android:background="@drawable/edittext_bg"
-                android:drawableStart="@drawable/search"
+                android:drawableStart="@drawable/search_icon"
                 android:drawablePadding="@dimen/_16sdp"
                 android:ems="10"
                 android:focusableInTouchMode="true"
