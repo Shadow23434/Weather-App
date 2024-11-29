@@ -181,7 +181,10 @@ public class AQIActivity extends AppCompatActivity {
         );
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
-        Content content = new Content.Builder().addText(AQIData).build();
+        Content content = new Content.Builder()
+                .addText(String.format("AQI data: %s;\n", AQIData) +
+                        String.format("Language: %s;", "tiếng Việt"))
+                .build();
         Executor executor = Executors.newSingleThreadExecutor();
 
         ListenableFuture<GenerateContentResponse> response = model.generateContent(content);

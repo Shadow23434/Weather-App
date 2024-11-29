@@ -38,7 +38,7 @@
         android:id="@+id/record_service_image"
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_100sdp"
-        android:background="@drawable/micro_image"
+        android:background="@drawable/record_service_image"
         app:layout_constraintTop_toBottomOf="@id/record_service_content"
         app:layout_constraintStart_toStartOf="@id/record_service_header"
         app:layout_constraintEnd_toEndOf="@id/record_service_header"/>

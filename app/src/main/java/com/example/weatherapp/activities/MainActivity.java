@@ -186,10 +186,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
         Content content = new Content.Builder().addText(
-                        String.format("location = %s;\n", currentLocation) +
-                        String.format("currentTemperature = %s;\n", currentTemperature) +
-                        String.format("weatherCondition = %s;\n", weatherCondition) +
-                        String.format("isNight = %b", isNight)
+                        String.format("Location: %s;\n", currentLocation) +
+                        String.format("Temperature: %s;\n", currentTemperature) +
+                        String.format("Weather condition: %s;\n", weatherCondition) +
+                        String.format("isNight: %b;\n", isNight) +
+                        String.format("Language: %s", "tiếng Việt")
         ).build();
         Executor executor = Executors.newSingleThreadExecutor();
 
